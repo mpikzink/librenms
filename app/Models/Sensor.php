@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use LibreNMS\Enum\Severity;
+use LibreNMS\Enum\CheckStatus;
 use LibreNMS\Interfaces\Models\Keyable;
 use LibreNMS\Util\Number;
 
@@ -37,6 +39,7 @@ class Sensor extends DeviceRelatedModel implements Keyable
         'group',
         'rrd_type',
     ];
+
     protected static $icons = [
         'airflow' => 'angle-double-right',
         'ber' => 'sort-amount-desc',
@@ -70,23 +73,53 @@ class Sensor extends DeviceRelatedModel implements Keyable
         'percent' => 'percent',
     ];
 
-    // ---- Helper Functions ----
+    // ---- Helper Methods ----
 
-    public function classDescr()
+    public function classDescr(): string
     {
-        $nice = collect([
-            'ber' => 'BER',
-            'dbm' => 'dBm',
-            'eer' => 'EER',
-            'snr' => 'SNR',
-        ]);
+        return static::getClassDescr($this->sensor_class);
+    }
 
-        return $nice->get($this->sensor_class, ucwords(str_replace('_', ' ', $this->sensor_class)));
+    public function classDescrLong(): string
+    {
+        return static::getClassDescrLong($this->sensor_class);
+    }
+
+    public function unit(): string
+    {
+        return static::getUnit($this->sensor_class);
+    }
+
+    public function unitLong(): string
+    {
+        return static::getUnitLong($this->sensor_class);
     }
 
     public function icon()
     {
         return collect(self::$icons)->get($this->sensor_class, 'delicius');
+    }
+
+    // Static Methods
+
+    public static function getClassDescr(string $class): string
+    {
+        return __('sensors.' . $class . '.short');
+    }
+
+    public function getClassDescrLong(string $class): string
+    {
+        return __('sensors.' . $class . '.long');
+    }
+
+    public static function getUnit(string $class): string
+    {
+        return __('sensors.' . $class . '.unit');
+    }
+
+    public static function getUnitLong(string $class): string
+    {
+        return __('sensors.' . $class . '.unit_long');
     }
 
     public static function getTypes()
@@ -100,7 +133,7 @@ class Sensor extends DeviceRelatedModel implements Keyable
         return self::$icons;
     }
 
-    public function guessLimits(bool $high, bool $low): void
+    public function guessLimits(bool $high, bool $high_warn, bool $low_warn, bool $low): void
     {
         if ($high) {
             $this->sensor_limit = match ($this->sensor_class) {
@@ -112,6 +145,18 @@ class Sensor extends DeviceRelatedModel implements Keyable
                 'signal' => -30,
                 'load' => 80,
                 'airflow', 'snr', 'frequency', 'pressure', 'cooling' => $this->sensor_current * 1.05,
+                default => null,
+            };
+        }
+
+        if ($high_warn) {
+            $this->sensor_limit_warn = match ($this->sensor_class) {
+                default => null,
+            };
+        }
+
+        if ($low_warn) {
+            $this->sensor_limit_low_warn = match ($this->sensor_class) {
                 default => null,
             };
         }
@@ -135,17 +180,27 @@ class Sensor extends DeviceRelatedModel implements Keyable
      */
     public function formatValue(): string
     {
-        $units = __('sensors.' . $this->sensor_class . '.unit');
-
         return match ($this->sensor_class) {
-            'current', 'power' => Number::formatSi($this->sensor_current, 3, 0, $units),
-            'dbm' => round($this->sensor_current, 3) . " $units",
-            default => "$this->sensor_current $units",
+            'current', 'power' => Number::formatSi($this->sensor_current, 3, 0, $this->unit()),
+            'dbm' => round($this->sensor_current, 3) . ' ' . $this->unit(),
+            default => $this->sensor_current . ' ' . $this->unit(),
         };
     }
 
     public function currentStatus(): Severity
     {
+
+        if($this->sensor_class === 'state'){
+            $stateTranslation= [
+                CheckStatus::OK => Severity::Ok,
+                CheckStatus::WARNING => Severity::Warning,
+                CheckStatus::ERROR => Severity::Error,
+                CheckStatus::UNKNOWN => Severity::Unknown
+            ];
+
+            return $stateTranslation[$this->state->state_generic_value];
+        }
+
         if ($this->sensor_limit !== null && $this->sensor_current >= $this->sensor_limit) {
             return Severity::Error;
         }
@@ -178,7 +233,13 @@ class Sensor extends DeviceRelatedModel implements Keyable
 
     public function translations(): BelongsToMany
     {
-        return $this->belongsToMany(StateTranslation::class, 'sensors_to_state_indexes', 'sensor_id', 'state_index_id', 'sensor_id', 'state_index_id');
+        return $this->belongsToMany(StateTranslation::class, SensorToStateIndex::class, 'sensor_id', 'state_index_id', 'sensor_id', 'state_index_id');
+    }
+
+    public function state(): HasOneThrough
+    {
+        return $this->hasOneThrough(StateTranslation::class, SensorToStateIndex::class, 'sensor_id', 'state_index_id', 'sensor_id', 'state_index_id')
+                    ->where('state_value',$this->sensor_current);
     }
 
     public function getCompositeKey(): string

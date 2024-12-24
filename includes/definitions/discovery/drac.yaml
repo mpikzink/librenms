@@ -1,13 +1,29 @@
-mib: DELL-RAC-MIB:IDRAC-MIB-SMIv2
+mib: IDRAC-MIB-SMIv2:DELL-RAC-MIB
 modules:
     os:
         hardware:
-          - .1.3.6.1.4.1.674.10892.5.1.3.12.0
-          - .1.3.6.1.4.1.674.10892.2.1.1.2.0
-        version: .1.3.6.1.4.1.674.10892.2.1.2.1.0
-        serial: .1.3.6.1.4.1.674.10892.2.1.1.11.0
-        location: .1.3.6.1.4.1.674.10892.5.1.3.8.0
+          - IDRAC-MIB-SMIv2::systemModelName.0
+          - DELL-RAC-MIB::drsProductShortName.0
+        version: DELL-RAC-MIB::drsFirmwareVersion.0
+        serial: DELL-RAC-MIB::drsSystemServiceTag.0
+        location: IDRAC-MIB-SMIv2::systemDataCenterName.0
     sensors:
+        fanspeed:
+            data:
+                -
+                    oid: IDRAC-MIB-SMIv2::coolingDeviceTable
+                    value: IDRAC-MIB-SMIv2::coolingDeviceReading
+                    num_oid: '.1.3.6.1.4.1.674.10892.5.4.700.12.1.6.{{ $index }}'
+                    descr: IDRAC-MIB-SMIv2::coolingDeviceLocationName
+                    index: '{{ $index }}'
+                    high_limit: IDRAC-MIB-SMIv2::coolingDeviceUpperCriticalThreshold
+                    low_limit: IDRAC-MIB-SMIv2::coolingDeviceLowerCriticalThreshold
+                    # Following can be enabled with new testfiles for Poweredge R640, iDRAC7, Poweredge M1000e
+                    # skip_values:
+                    #    -
+                    #        oid: IDRAC-MIB-SMIv2::coolingDeviceSubType
+                    #        op: 'not_in_array'
+                    #        value: [ 3, 5 ]
         state:
             data:
                 -
@@ -421,7 +437,6 @@ modules:
                             oid: amperageProbeType
                             op: '!='
                             value: 23
-
         power:
             data:
                 -

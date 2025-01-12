@@ -53,7 +53,9 @@ if ($if_list) {
         $port['ifAlias'] = str_ireplace($port['type'] . ': ', '', $port['ifAlias']);
         $port['ifAlias'] = str_ireplace('[PNI]', 'Private', $port['ifAlias']);
 
-        $ifclass = Url::portLinkDisplayClass((object)['ifOperStatus' => $port['ifOperStatus'], 'ifAdminStatus' => $port['ifAdminStatus']]);
+        // TODO: new Port() is a workaround since $port is an array
+        $ifclass = Url::portLinkDisplayClass(new Port(['ifOperStatus' => $port['ifOperStatus'], 'ifAdminStatus' => $port['ifAdminStatus']]));
+
         if ($bg == '#ffffff') {
             $bg = '#e5e5e5';
         } else {

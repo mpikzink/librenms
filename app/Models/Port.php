@@ -20,6 +20,7 @@ class Port extends DeviceRelatedModel
 
     public $timestamps = false;
     protected $primaryKey = 'port_id';
+    protected $fillable = ['ifAdminStatus', 'ifOperStatus']; //Workaround for Url::portLinkDisplayClass(new Port([...]))
 
     /**
      * Initialize this class

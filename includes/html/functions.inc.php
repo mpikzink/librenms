@@ -11,6 +11,7 @@
  */
 
 use App\Facades\DeviceCache;
+use App\Models\Port;
 use LibreNMS\Config;
 use LibreNMS\Enum\ImageFormat;
 use LibreNMS\Util\Number;
@@ -257,7 +258,8 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
         $port['graph_type'] = 'port_bits';
     }
 
-    $class = Url::portLinkDisplayClass($port);
+    // TODO: new Port() is a workaround since $port is an array
+    $class = Url::portLinkDisplayClass(new Port(['ifOperStatus' => $port['ifOperStatus'], 'ifAdminStatus' => $port['ifAdminStatus']]));
 
     if (! isset($port['hostname'])) {
         $port = array_merge($port, device_by_id_cache($port['device_id']));

@@ -131,11 +131,6 @@ function short_port_descr($desc)
     return $desc;
 }
 
-function rewrite_adslLineType($adslLineType)
-{
-    return \LibreNMS\Util\Rewrite::dslLineType($adslLineType);
-}
-
 function ipmiSensorName($hardwareId, $sensorIpmi)
 {
     $ipmiSensorsNames = [

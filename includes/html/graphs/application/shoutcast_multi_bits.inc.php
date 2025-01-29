@@ -1,6 +1,6 @@
 <?php
 
-$device = device_by_id_cache($vars['id']);
+use App\Facades\DeviceCache;
 
 $units = 'b';
 $total_units = 'B';
@@ -21,7 +21,7 @@ $colour_area_in = 'CDEB8B';
 $colour_area_out = 'C3D9FF';
 
 $rrd_list = [];
-$rrd_filenames = glob(Rrd::name($device['hostname'], ['app', 'shoutcast', $app->app_id], '*.rrd'));
+$rrd_filenames = glob(Rrd::name(DeviceCache::get($vars['id'])->value('hostname'), ['app', 'shoutcast', $app->app_id], '*.rrd'));
 foreach ($rrd_filenames as $file) {
     $pieces = explode('-', basename($file, '.rrd'));
     $hostname = end($pieces);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 echo '
 <div>
   <div class="panel panel-default">
@@ -19,10 +21,10 @@ echo '
         </thead>';
 
 foreach (dbFetchRows('SELECT C.`device_id`, C.`entPhysicalIndex`, C.`afi`, C.`cef_path`, C.`drop`, C.`punt`, C.`punt2host`, E.`entPhysicalName`, E.`entPhysicalModelName`, E.`entPhysicalContainedIn` FROM `cef_switching` AS `C`, `entPhysical` AS E WHERE C.`device_id` = E.`device_id` AND C.`entPhysicalIndex` = E.`entPhysicalIndex` ORDER BY C.`device_id`, C.`entPhysicalIndex`, C.`afi`, C.`cef_index`') as $cef) {
-    $device = device_by_id_cache($cef['device_id']);
+    $device = DeviceCache::get($cef['device_id']);
 
     if (! $cef['entPhysicalModelName'] && $cef['entPhysicalContainedIn']) {
-        $parent_entity = dbFetchRow('SELECT `entPhysicalName`, `entPhysicalModelName` FROM `entPhysical` WHERE `device_id` = ? AND `entPhysicalIndex` = ?', [$device['device_id'], $cef['entPhysicalContainedIn']]);
+        $parent_entity = dbFetchRow('SELECT `entPhysicalName`, `entPhysicalModelName` FROM `entPhysical` WHERE `device_id` = ? AND `entPhysicalIndex` = ?', [$device->device_id, $cef['entPhysicalContainedIn']]);
         $entity_descr = $cef['entPhysicalName'] . ' (' . $parent_entity['entPhysicalModelName'] . ')';
     } else {
         $entity_descr = $cef['entPhysicalName'] . ' (' . $cef['entPhysicalModelName'] . ')';
@@ -32,7 +34,7 @@ foreach (dbFetchRows('SELECT C.`device_id`, C.`entPhysicalIndex`, C.`afi`, C.`ce
         <tbody>
           <tr>
             <td></td>
-            <td>' . generate_device_link($device, 0, ['tab' => 'routing', 'proto' => 'cef']) . '</td>
+            <td>' . generate_device_link($device->toArray(), 0, ['tab' => 'routing', 'proto' => 'cef']) . '</td>
             <td>' . $entity_descr . '</td>
             <td>' . $cef['afi'] . '</td>
             <td>' . $cef['cef_path'] . '</td>

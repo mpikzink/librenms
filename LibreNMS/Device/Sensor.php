@@ -25,6 +25,7 @@
 
 namespace LibreNMS\Device;
 
+use App\Facades\DeviceCache;
 use App\Models\Eventlog;
 use Illuminate\Support\Facades\Log;
 use LibreNMS\Config;
@@ -133,7 +134,7 @@ class Sensor implements DiscoveryModule, PollerModule
         if (is_null($this->current)) {
             $sensor['sensor_oids'] = $this->oids;
 
-            $prefetch = self::fetchSnmpData(device_by_id_cache($device_id), [$sensor]);
+            $prefetch = self::fetchSnmpData(DeviceCache::get($device_id)->toArray(), [$sensor]);
             $this->current = static::processSensorValue($prefetch, $this->aggregator, $this->divisor, $this->multiplier);
             $this->valid = is_numeric($this->current);
         }

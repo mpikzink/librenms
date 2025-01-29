@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Exceptions\RrdGraphException;
 use LibreNMS\Util\Mac;
 
@@ -22,8 +23,7 @@ if (is_numeric($vars['id'])) {
 
                 $rrd_filename = $filename;
                 $port = cleanPort(get_port_by_id($acc['port_id']));
-                $device = device_by_id_cache($port['device_id']);
-                $title = generate_device_link($device);
+                $title = generate_device_link(DeviceCache::get($port['device_id'])->toArray());
                 $title .= ' :: Port  ' . generate_port_link($port);
                 $title .= ' :: ' . Mac::parse($acc['mac'])->readable();
                 $auth = true;

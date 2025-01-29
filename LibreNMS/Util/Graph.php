@@ -118,8 +118,8 @@ class Graph
         }
 
         if (isset($vars['device'])) {
-            $device = device_by_id_cache(is_numeric($vars['device']) ? $vars['device'] : getidbyname($vars['device']));
-            DeviceCache::setPrimary($device['device_id']);
+            $device_id = DeviceCache::get($vars['device'])->value('device_id');
+            DeviceCache::setPrimary($device_id);
         }
 
         // variables for included graphs

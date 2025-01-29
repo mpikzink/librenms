@@ -1,5 +1,7 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 if (! Auth::user()->hasGlobalAdmin()) {
     require 'includes/html/error-no-perm.inc.php';
     exit;
@@ -18,8 +20,7 @@ if (Auth::user()->isDemo()) {
         if ($_REQUEST['confirm']) {
             print_message(nl2br(delete_device($_REQUEST['id'])) . "\n");
         } else {
-            $device = device_by_id_cache($_REQUEST['id']);
-            print_error('Are you sure you want to delete device ' . $device['hostname'] . '?'); ?>
+            print_error('Are you sure you want to delete device ' . DeviceCache::get($_REQUEST['id'])->value('hostname') . '?'); ?>
 <br />
 <center>
   <font color="red"></font><i class="fa fa-exclamation-triangle fa-3x"></i></font>

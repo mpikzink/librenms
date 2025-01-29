@@ -13,6 +13,8 @@
  * @author     LibreNMS Contributors
 */
 
+use App\Facades\DeviceCache;
+
 $where = 1;
 
 if (is_numeric($vars['device_id'])) {
@@ -69,12 +71,10 @@ $sql = "SELECT COUNT(*), D.device_id, R.name $sql";
 
 $rulei = 0;
 foreach (dbFetchRows($sql, $param) as $alertlog) {
-    $dev = device_by_id_cache($alertlog['device_id']);
-
     $response[] = [
         'id' => $rulei++,
         'count' => $alertlog['COUNT(*)'],
-        'hostname' => '<div class="incident">' . generate_device_link($dev),
+        'hostname' => '<div class="incident">' . generate_device_link(DeviceCache::get($alertlog['device_id'])->toArray()),
         'alert_rule' => $alertlog['name'],
     ];
 }//end foreach

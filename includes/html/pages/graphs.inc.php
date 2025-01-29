@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Config;
 use LibreNMS\Util\Time;
 
@@ -26,8 +27,8 @@ $id = $vars['id'] ?? null;
 
 if (isset($vars['device'])) {
     $device = is_numeric($vars['device'])
-        ? device_by_id_cache($vars['device'])
-        : device_by_name($vars['device']);
+        ? DeviceCache::get($vars['device'])
+        : DeviceCache::getByHostname($vars['device')
 }
 
 $auth = false;

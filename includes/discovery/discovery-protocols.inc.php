@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Config;
 use LibreNMS\Util\IP;
 use LibreNMS\Util\StringHelpers;
@@ -394,12 +395,12 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                     }
                 }
 
-                $remote_device = device_by_id_cache($remote_device_id);
-                if ($remote_device['os'] == 'calix') {
+                $remote_device = DeviceCache::get($remote_device_id);
+                if ($remote_device->os == 'calix') {
                     $remote_port_name = 'EthPort ' . $lldp['lldpRemPortId'];
                 }
 
-                if ($remote_device['os'] == 'xos') {
+                if ($remote_device->os == 'xos') {
                     $slot_port = explode(':', $remote_port_name);
                     if (sizeof($slot_port) == 2) {
                         $n_slot = (int) $slot_port[0];
@@ -411,8 +412,8 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                     $remote_port_name = (string) ($n_slot * 1000 + $n_port);
                 }
 
-                if ($remote_device['os'] == 'netgear' &&
-                        $remote_device['sysDescr'] == 'GS108T' &&
+                if ($remote_device->os == 'netgear' &&
+                        $remote_device->sysDescr == 'GS108T' &&
                         $lldp['lldpRemSysDesc'] == 'Smart Switch') {
                     // Some netgear switches, as Netgear GS108Tv1 presents it's port name over snmp as
                     // "Port 1 Gigabit Ethernet" but as 'lldpRemPortId' => 'g1' and
@@ -433,7 +434,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                     $remote_port_name = $remote_port_name . ' (' . $remote_port_mac . ')';
                 }
                 if (empty($lldp['lldpRemSysName'])) {
-                    $lldp['lldpRemSysName'] = $remote_device['sysName'] ?: $remote_device['hostname'];
+                    $lldp['lldpRemSysName'] = $remote_device->sysName ?: $remote_device->hostname;
                 }
                 if (empty($lldp['lldpRemSysName'])) {
                     $lldp['lldpRemSysName'] = $lldp['lldpRemSysDesc'];

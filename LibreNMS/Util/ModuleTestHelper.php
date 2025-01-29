@@ -26,9 +26,9 @@
 namespace LibreNMS\Util;
 
 use App\Actions\Device\ValidateDeviceAndCreate;
+use App\Facades\DeviceCache;
 use App\Jobs\PollDevice;
 use App\Models\Device;
-use DeviceCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -168,7 +168,7 @@ class ModuleTestHelper
     {
         global $device;
 
-        $device = device_by_id_cache($device_id);
+        $device = DeviceCache::get($device_id)->toArray();
         DeviceCache::setPrimary($device_id);
 
         // Run discovery
@@ -588,7 +588,7 @@ class ModuleTestHelper
         }
 
         // Populate the device variable
-        $device = device_by_id_cache($device_id, true);
+        $device = DeviceCache::get($device_id)->refresh()->toArray();
         DeviceCache::setPrimary($device_id);
 
         $data = [];  // array to hold dumped data
@@ -620,7 +620,7 @@ class ModuleTestHelper
         $discovered_modules = array_keys($this->discovery_module_output);
 
         // Dump the discovered data
-        $data = array_merge_recursive($data, $this->dumpDb($device['device_id'], $discovered_modules, 'discovery'));
+        $data = array_merge_recursive($data, $this->dumpDb($device->device_id, $discovered_modules, 'discovery'));
         DeviceCache::get($device_id)->refresh(); // refresh the device
 
         // Run the poller

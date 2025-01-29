@@ -1,9 +1,10 @@
 <?php
 
 // Generate a list of ports and then call the multi_bits grapher to generate from the list
-$device = device_by_id_cache($id);
 
-$file = Rrd::name($device['hostname'], 'screenos-sessions');
+use App\Facades\DeviceCache;
+
+$file = Rrd::name(DeviceCache::get($id)->value('hostname'), 'screenos-sessions');
 
 $rrd_list[0]['filename'] = $file;
 $rrd_list[0]['descr'] = 'Maxiumum';

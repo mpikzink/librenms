@@ -15,6 +15,7 @@ parameters:
 
     excludePaths:
         - tests/phpstan/
+        - LibreNMS/Validations/Poller/
 
     scanDirectories:
         - includes

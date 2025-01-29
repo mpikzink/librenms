@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use App\Models\Device;
 use App\Models\Eventlog;
 use LibreNMS\Alert\AlertRules;
@@ -44,7 +45,7 @@ function get_service_status($device = null)
 function add_service($device, $type, $desc, $ip = '', $param = '', $ignore = 0, $disabled = 0, $template_id = '', $name = '')
 {
     if (! is_array($device)) {
-        $device = device_by_id_cache($device);
+        $device = DeviceCache::get((int) $device)->toArray();
     }
 
     if (empty($ip)) {

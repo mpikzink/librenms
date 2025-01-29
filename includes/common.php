@@ -16,6 +16,7 @@
  * the source code distribution for details.
  */
 
+use App\Facades\DeviceCache;
 use LibreNMS\Config;
 use LibreNMS\Enum\Severity;
 use LibreNMS\Exceptions\InvalidIpException;
@@ -188,19 +189,7 @@ function ifclass($ifOperStatus, $ifAdminStatus)
 
 function device_by_name($name)
 {
-    return device_by_id_cache(getidbyname($name));
-}
-
-function device_by_id_cache($device_id, $refresh = false)
-{
-    $model = $refresh ? DeviceCache::refresh((int) $device_id) : DeviceCache::get((int) $device_id);
-
-    $device = $model->toArray();
-    $device['location'] = $model->location->location ?? null;
-    $device['lat'] = $model->location->lat ?? null;
-    $device['lng'] = $model->location->lng ?? null;
-
-    return $device;
+    return DeviceCache::get((int) getidbyname($name));
 }
 
 function gethostbyid($device_id)

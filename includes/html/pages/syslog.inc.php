@@ -13,6 +13,7 @@
  * @author     LibreNMS Contributors
 */
 
+use App\Facades\DeviceCache;
 use Carbon\Carbon;
 use LibreNMS\Config;
 
@@ -50,7 +51,7 @@ $pagetitle[] = 'Syslog';
         '<option value="">All Devices&nbsp;&nbsp;</option>' +
             <?php
             if ($device_id) {
-                echo "'<option value=$device_id>" . str_replace(['"', '\''], '', htmlentities(format_hostname(device_by_id_cache($device_id)))) . "</option>' +";
+                echo "'<option value=$device_id>" . str_replace(['"', '\''], '', htmlentities(format_hostname(DeviceCache::get($device_id)->toArray()))) . "</option>' +";
             } ?>
         '</select>' +
             <?php

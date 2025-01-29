@@ -30,13 +30,13 @@ if (! empty($ifName) && is_numeric($port_id)) {
         // Set to repoll so we avoid using ifDescr on port poll
     }
     if (dbUpdate(['ifAlias' => $descr], 'ports', '`port_id`=?', [$port_id]) > 0) {
-        $device = device_by_id_cache($device_id);
+        $device = DeviceCache::get($device_id);
         if ($descr === 'repoll') {
-            del_dev_attrib($device, 'ifName:' . $ifName);
-            Eventlog::log("$ifName Port ifAlias cleared manually", $device['device_id'], 'interface', Severity::Notice, $port_id);
+            del_dev_attrib($device->toArray(), 'ifName:' . $ifName);
+            Eventlog::log("$ifName Port ifAlias cleared manually", $device->device_id, 'interface', Severity::Notice, $port_id);
         } else {
-            set_dev_attrib($device, 'ifName:' . $ifName, 1);
-            Eventlog::log("$ifName Port ifAlias set manually: $descr", $device['device_id'], 'interface', Severity::Notice, $port_id);
+            set_dev_attrib($device->toArray(), 'ifName:' . $ifName, 1);
+            Eventlog::log("$ifName Port ifAlias set manually: $descr", $device->device_id, 'interface', Severity::Notice, $port_id);
         }
         $status = 'ok';
     } else {

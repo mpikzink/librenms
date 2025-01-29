@@ -1,12 +1,12 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 $scale_min = '0';
 
 require 'includes/html/graphs/common.inc.php';
 
-$device = device_by_id_cache($id);
-
-$rrd_filename = Rrd::name($device['hostname'], 'altiga-ssl');
+$rrd_filename = Rrd::name(DeviceCache::get($id)->value('hostname'), 'altiga-ssl');
 
 $rrd_options .= " DEF:TotalSessions=$rrd_filename:TotalSessions:AVERAGE";
 $rrd_options .= " DEF:ActiveSessions=$rrd_filename:ActiveSessions:AVERAGE";

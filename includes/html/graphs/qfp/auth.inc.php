@@ -12,6 +12,8 @@
  * @author     Pavle Obradovic <pobradovic08@gmail.com>
  */
 
+use App\Facades\DeviceCache;
+
 /*
  * Get a single module component with specified ID
  */
@@ -33,15 +35,15 @@ if (isset($vars['id'])) {
      */
     if ($components && isset($components[$device_id][$vars['id']]) && ($auth || device_permitted($device_id))) {
         $components = $components[$device_id][$vars['id']];
-        $device = device_by_id_cache($device_id);
+        $device = DeviceCache::get($device_id);
 
         /*
          * Data is split into just two RRD files, memory resources and utilization
          */
         if ($subtype == 'memory') {
-            $rrd_filename = Rrd::name($device['hostname'], ['cisco-qfp', 'memory', $components['entPhysicalIndex']]);
+            $rrd_filename = Rrd::name($device->hostname, ['cisco-qfp', 'memory', $components['entPhysicalIndex']]);
         } else {
-            $rrd_filename = Rrd::name($device['hostname'], ['cisco-qfp', 'util', $components['entPhysicalIndex']]);
+            $rrd_filename = Rrd::name($device->hostname, ['cisco-qfp', 'util', $components['entPhysicalIndex']]);
         }
 
         /*
@@ -49,10 +51,10 @@ if (isset($vars['id'])) {
          */
         $link_array = [
             'page' => 'device',
-            'device' => $device['device_id'],
+            'device' => $device->device_id,
             'tab' => 'health',
         ];
-        $title = generate_device_link($device);
+        $title = generate_device_link($device->toArray());
         $title .= ' :: ' . generate_link('QFP', $link_array, ['metric' => 'qfp']);
         $title .= ' :: ' . $components['name'];
 

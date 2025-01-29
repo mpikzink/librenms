@@ -75,8 +75,7 @@ if (! Auth::user()->hasGlobalRead()) {
             </tr>
           </thead>';
 
-    foreach (IsisAdjacency::whereIn('isisISAdjState', $filter)->with('port')->get() as $adj) {
-        $device = device_by_id_cache($adj->device_id);
+    foreach (IsisAdjacency::whereIn('isisISAdjState', $filter)->with('port','device')->get() as $adj) {
         if ($adj->isisISAdjState == 'up') {
             $color = 'green';
         } else {
@@ -89,7 +88,7 @@ if (! Auth::user()->hasGlobalRead()) {
           <tbody>
           <tr>
               <td></td>
-              <td>' . generate_device_link($device, 0, ['tab' => 'routing', 'proto' => 'isis']) . '</td>
+              <td>' . generate_device_link($adj->device->toArray(), 0, ['tab' => 'routing', 'proto' => 'isis']) . '</td>
               <td>' . \LibreNMS\Util\Url::portLink($adj->port) . '</td>
               <td>' . $adj->isisISAdjIPAddrAddress . '</td>
               <td>' . $adj->isisISAdjNeighSysID . '</td>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 foreach ($vars as $var => $value) {
     if ($value != '') {
         switch ($var) {
@@ -34,8 +36,7 @@ foreach (dbFetchRows("SELECT * FROM `packages` WHERE 1 $where GROUP BY `name`", 
 
             $content .= '<div style="background-color: #eeeeee; margin: 5px;"><span style="font-weight: bold; ">' . $version . $dbuild . '</span>';
             foreach ($bloo as $device_id => $no) {
-                $this_device = device_by_id_cache($device_id);
-                $content .= '<span style="background-color: #f5f5f5; margin: 5px;">' . $this_device['hostname'] . '</span> ';
+                $content .= '<span style="background-color: #f5f5f5; margin: 5px;">' . DeviceCache::get($device_id)->value('hostname') . '</span> ';
             }
 
             $content .= '</div>';

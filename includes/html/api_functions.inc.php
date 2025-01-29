@@ -13,6 +13,7 @@
  */
 
 use App\Actions\Device\ValidateDeviceAndCreate;
+use App\Facades\DeviceCache;
 use App\Models\Availability;
 use App\Models\Device;
 use App\Models\DeviceGroup;
@@ -246,7 +247,7 @@ function get_graph_generic_by_hostname(Request $request)
 
     // use hostname as device_id if it's all digits
     $device_id = ctype_digit($hostname) ? $hostname : getidbyname($hostname);
-    $device = device_by_id_cache($device_id);
+    $device = DeviceCache::get($device_id)->toArray();
     $vars['device'] = $device['device_id'];
 
     return check_device_permission($device_id, function () use ($request, $vars) {
@@ -264,7 +265,7 @@ function get_graph_by_service(Request $request)
     $hostname = $request->route('hostname');
     // use hostname as device_id if it's all digits
     $device_id = ctype_digit($hostname) ? $hostname : getidbyname($hostname);
-    $device = device_by_id_cache($device_id);
+    $device = DeviceCache::get($device_id)->toArray();
     $vars['device'] = $device['device_id'];
 
     return check_device_permission($device_id, function () use ($request, $vars) {
@@ -292,7 +293,7 @@ function get_device(Illuminate\Http\Request $request)
     $device_id = ctype_digit($hostname) ? $hostname : getidbyname($hostname);
 
     // find device matching the id
-    $device = device_by_id_cache($device_id);
+    $device = DeviceCache::get($device_id)->toArray();
     if (! $device || ! isset($device['device_id'])) {
         return api_error(404, "Device $hostname does not exist");
     }
@@ -474,7 +475,7 @@ function del_device(Illuminate\Http\Request $request)
     $device = null;
     if ($device_id) {
         // save the current details for returning to the client on successful delete
-        $device = device_by_id_cache($device_id);
+        $device = DeviceCache::get($device_id)->toArray();
     }
 
     if (! $device) {
@@ -626,7 +627,7 @@ function get_vlans(Illuminate\Http\Request $request)
     $device = null;
     if ($device_id) {
         // save the current details for returning to the client on successful delete
-        $device = device_by_id_cache($device_id);
+        $device = DeviceCache::get($device_id)->toArray();
     }
 
     if (! $device) {
@@ -958,7 +959,7 @@ function trigger_device_discovery(Illuminate\Http\Request $request)
     // use hostname as device_id if it's all digits
     $device_id = ctype_digit($hostname) ? $hostname : getidbyname($hostname);
     // find device matching the id
-    $device = device_by_id_cache($device_id);
+    $device = DeviceCache::get($device_id)->toArray();
     if (! $device) {
         return api_error(404, "Device $hostname does not exist");
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 echo '
 <div>
   <div class="panel panel-default">
@@ -19,11 +21,11 @@ echo '
           </tr>
         </thead>';
 foreach (dbFetchRows("SELECT * FROM `ospf_instances` WHERE `ospfAdminStat` = 'enabled'") as $instance) {
-    $device = device_by_id_cache($instance['device_id']);
-    $area_count = dbFetchCell("SELECT COUNT(*) FROM `ospf_areas` WHERE `device_id` = '" . $device['device_id'] . "'");
-    $port_count = dbFetchCell("SELECT COUNT(*) FROM `ospf_ports` WHERE `device_id` = '" . $device['device_id'] . "'");
-    $port_count_enabled = dbFetchCell("SELECT COUNT(*) FROM `ospf_ports` WHERE `ospfIfAdminStat` = 'enabled' AND `device_id` = '" . $device['device_id'] . "'");
-    $nbr_count = dbFetchCell("SELECT COUNT(*) FROM `ospf_nbrs` WHERE `device_id` = '" . $device['device_id'] . "'");
+    $device = DeviceCache::get($instance['device_id']);
+    $area_count = dbFetchCell("SELECT COUNT(*) FROM `ospf_areas` WHERE `device_id` = '" . $device->device_id . "'");
+    $port_count = dbFetchCell("SELECT COUNT(*) FROM `ospf_ports` WHERE `device_id` = '" . $device->device_id . "'");
+    $port_count_enabled = dbFetchCell("SELECT COUNT(*) FROM `ospf_ports` WHERE `ospfIfAdminStat` = 'enabled' AND `device_id` = '" . $device->device_id . "'");
+    $nbr_count = dbFetchCell("SELECT COUNT(*) FROM `ospf_nbrs` WHERE `device_id` = '" . $device->device_id . "'");
 
     $status_color = $abr_status_color = $asbr_status_color = 'default';
 
@@ -43,7 +45,7 @@ foreach (dbFetchRows("SELECT * FROM `ospf_instances` WHERE `ospfAdminStat` = 'en
         <tbody>
           <tr>
             <td></td>
-            <td>' . generate_device_link($device, 0, ['tab' => 'routing', 'proto' => 'ospf']) . '</td>
+            <td>' . generate_device_link($device->toArray(), 0, ['tab' => 'routing', 'proto' => 'ospf']) . '</td>
             <td>' . $instance['ospfRouterId'] . '</td>
             <td><span class="label label-' . $status_color . '">' . $instance['ospfAdminStat'] . '</span></td>
             <td><span class="label label-' . $abr_status_color . '">' . $instance['ospfAreaBdrRtrStatus'] . '</span></td>

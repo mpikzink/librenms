@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
 use Illuminate\Support\Str;
 use LibreNMS\Exceptions\InvalidModuleException;
@@ -42,14 +43,10 @@ if (isset($options['h'])) {
 }
 
 if (isset($hostname)) {
-    if (is_numeric($hostname)) {
-        $device = device_by_id_cache($hostname);
-    } elseif (! empty($hostname)) {
-        $device = device_by_name($hostname);
-    }
+    $device = DeviceCache::get($hostname);
 
-    if (isset($device['os']) && $device['os'] != 'generic') {
-        $target_os = $device['os'];
+    if (isset($device->os) && $device->os != 'generic') {
+        $target_os = $device->os;
     } elseif (isset($options['o'])) {
         $target_os = $options['o'];
     } elseif (isset($options['os'])) {
@@ -128,7 +125,7 @@ try {
 
     echo 'Capturing Data: ';
     LibrenmsConfig::invalidateAndReload();
-    $capture->captureFromDevice($device['device_id'], $prefer_new_snmprec, $full);
+    $capture->captureFromDevice($device->device_id, $prefer_new_snmprec, $full);
     echo "\nVerify these file(s) do not contain any private data before sharing!\n";
 } catch (InvalidModuleException $e) {
     echo $e->getMessage() . PHP_EOL;

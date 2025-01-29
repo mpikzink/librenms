@@ -25,6 +25,7 @@
 
 namespace LibreNMS\Device;
 
+use App\Facades\DeviceCache;
 use App\Models\Eventlog;
 use Illuminate\Support\Str;
 use LibreNMS\Enum\Severity;
@@ -36,6 +37,7 @@ use LibreNMS\Model;
 use LibreNMS\OS;
 use LibreNMS\RRD\RrdDefinition;
 use LibreNMS\Util\Oid;
+use SnmpQuery;
 
 class Processor extends Model implements DiscoveryModule, PollerModule, DiscoveryItem
 {
@@ -107,8 +109,8 @@ class Processor extends Model implements DiscoveryModule, PollerModule, Discover
 
         // validity not checked yet
         if (is_null($proc->processor_usage)) {
-            $data = snmp_get(device_by_id_cache($proc->device_id), $proc->processor_oid, '-Ovq');
-            $proc->valid = ($data !== false);
+            $data = SnmpQuery::device(DeviceCache::get($proc->device_id))->get($proc->processor_oid)->value();
+            $proc->valid = ($data !== '');
             if (! $proc->valid) {
                 return $proc;
             }

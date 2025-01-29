@@ -1,8 +1,9 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Config;
 
-$src = device_by_id_cache($vars['src']);
+$src = DeviceCache::get($vars['src']);
 
 // This is my translation of Smokeping's graphing.
 // Thanks to Bill Fenner for Perl->Human translation:>
@@ -30,17 +31,17 @@ if ($width > '500') {
 }
 
 $filename_dir = generate_smokeping_file($device);
-if ($src['hostname'] == Config::get('own_hostname')) {
+if ($src->hostname == Config::get('own_hostname')) {
     $filename = $filename_dir . $device['hostname'] . '.rrd';
     if (! Rrd::checkRrdExists($filename)) {
         // Try with dots in hostname replaced by underscores
         $filename = $filename_dir . str_replace('.', '_', $device['hostname']) . '.rrd';
     }
 } else {
-    $filename = $filename_dir . $device['hostname'] . '~' . $src['hostname'] . '.rrd';
+    $filename = $filename_dir . $device['hostname'] . '~' . $src->hostname . '.rrd';
     if (! Rrd::checkRrdExists($filename)) {
         // Try with dots in hostname replaced by underscores
-        $filename = $filename_dir . str_replace('.', '-', $device['hostname']) . '~' . $src['hostname'] . '.rrd';
+        $filename = $filename_dir . str_replace('.', '-', $device['hostname']) . '~' . $src->hostname . '.rrd';
     }
 }
 

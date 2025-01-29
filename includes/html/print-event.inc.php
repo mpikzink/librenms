@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Util\Rewrite;
 
 /*
@@ -30,8 +31,8 @@ echo '<td>' . $icon . '</td>';
 echo '<td style="vertical-align: middle;">' . $entry['datetime'] . '</td>';
 
 if (! isset($vars['device'])) {
-    $dev = device_by_id_cache($entry['device_id']);
-    echo '<td style="vertical-align: middle;">' . generate_device_link($dev, shorthost($dev['hostname'])) . '</td>';
+    $dev = DeviceCache::get($entry['device_id']);
+    echo '<td style="vertical-align: middle;">' . generate_device_link($dev->toArray(), shorthost($dev->hostname)) . '</td>';
 }
 
 if ($entry['type'] == 'interface') {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Config;
 
 function rewrite_entity_descr($descr)
@@ -47,7 +48,7 @@ function cleanPort($interface, $device = null)
     $interface['ifDescr'] = htmlentities($interface['ifDescr'] ?? '');
 
     if (! $device) {
-        $device = device_by_id_cache($interface['device_id']);
+        $device = DeviceCache::get($interface['device_id'])->toArray();
     }
 
     $os = strtolower($device['os']);

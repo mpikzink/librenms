@@ -247,7 +247,7 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
     $class = ifclass($port['ifOperStatus'], $port['ifAdminStatus']);
 
     if (! isset($port['hostname'])) {
-        $port = array_merge($port, device_by_id_cache($port['device_id']));
+        $port = array_merge($port, DeviceCache::get($port['device_id'])->toArray());
     }
 
     if (! isset($port['label'])) {
@@ -301,7 +301,7 @@ function generate_sensor_link($args, $text = null, $type = null)
     }
 
     if (! isset($args['hostname'])) {
-        $args = array_merge($args, device_by_id_cache($args['device_id']));
+        $args = array_merge($args, DeviceCache::get($args['device_id'])->toArray());
     }
 
     $content = '<div class=list-large>' . $text . '</div>';
@@ -432,7 +432,7 @@ function generate_ap_link($args, $text = null, $type = null)
     }
 
     if (! isset($args['hostname'])) {
-        $args = array_merge($args, device_by_id_cache($args['device_id']));
+        $args = array_merge($args, DeviceCache::get($args['device_id'])->toArray());
     }
 
     $content = '<div class=list-large>' . $args['text'] . ' - ' . Rewrite::normalizeIfName($args['label']) . '</div>';

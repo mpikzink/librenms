@@ -13,6 +13,8 @@
  * @author     LibreNMS Contributors
 */
 
+use App\Facades\DeviceCache;
+
 $alert_severities = [
     // alert_rules.status is enum('ok','warning','critical')
     'ok' => 1,
@@ -91,7 +93,7 @@ if (session('preferences.timezone')) {
 
 $rulei = 0;
 foreach (dbFetchRows($sql, $param) as $alertlog) {
-    $dev = device_by_id_cache($alertlog['device_id']);
+    $dev = DeviceCache::get($alertlog['device_id']);
     $alert_state = $alertlog['state'];
     // If it's a new rule created, or a clear/RECOVERED
     if ($alert_state == '0') {
@@ -131,7 +133,7 @@ foreach (dbFetchRows($sql, $param) as $alertlog) {
         'time_logged' => $alertlog['humandate'],
         'details' => '<a class="fa fa-plus incident-toggle" style="display:none" data-toggle="collapse" data-target="#incident' . $rulei . '" data-parent="#alerts"></a>',
         'verbose_details' => "<button type='button' class='btn btn-alert-details command-alert-details' style='display:none' aria-label='Details' id='alert-details' data-alert_log_id='{$alert_log_id}'><i class='fa-solid fa-circle-info'></i></button>",
-        'hostname' => '<div class="incident">' . generate_device_link($dev) . '<div id="incident' . $rulei . '" class="collapse">' . $fault_detail . '</div></div>',
+        'hostname' => '<div class="incident">' . generate_device_link($dev->toArray()) . '<div id="incident' . $rulei . '" class="collapse">' . $fault_detail . '</div></div>',
         'alert' => htmlspecialchars($alertlog['alert']),
         'status' => "<i class='alert-status " . $status . "' title='" . ($alert_state ? 'active' : 'recovered') . "'></i>",
         'severity' => $alertlog['severity'],

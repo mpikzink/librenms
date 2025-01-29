@@ -1,9 +1,11 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 require 'memcached.inc.php';
 require 'includes/html/graphs/common.inc.php';
 
-$device = device_by_id_cache($var['id']);
+$device = DeviceCache::get($var['id'])->toArray();
 
 require 'includes/html/graphs/common.inc.php';
 

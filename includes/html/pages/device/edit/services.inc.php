@@ -1,5 +1,7 @@
 <?php
 
+use App\Facades\DeviceCache;
+
 if (Auth::user()->hasGlobalRead()) {
     if ($vars['addsrv']) {
         if (Auth::user()->hasGlobalAdmin()) {
@@ -21,8 +23,8 @@ if (Auth::user()->hasGlobalRead()) {
         }
     }
 
-    $dev = device_by_id_cache($device['device_id']);
-    $devicesform = "<option value='" . $dev['device_id'] . "'>" . $dev['hostname'] . '</option>';
+    $dev = DeviceCache::get($device['device_id']);
+    $devicesform = "<option value='" . $dev->device_id . "'>" . $dev->hostname . '</option>';
 
     if ($updated) {
         print_message('Device Settings Saved');

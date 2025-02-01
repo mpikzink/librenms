@@ -20,7 +20,7 @@ use LibreNMS\RRD\RrdDefinition;
 //     );
 
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-250-transmitPower', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-250-transmitPower', $tags, $fields);
 //     $os->enableGraph('cambium_250_transmitPower');
 // }
 
@@ -36,7 +36,7 @@ use LibreNMS\RRD\RrdDefinition;
 //     );
 
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-250-receivePower', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-250-receivePower', $tags, $fields);
 //     $os->enableGraph('cambium_250_receivePower');
 // }
 
@@ -52,7 +52,7 @@ if (is_numeric($txModulation) && is_numeric($rxModulation)) {
     ];
 
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-250-modulationMode', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-250-modulationMode', $tags, $fields);
     $os->enableGraph('cambium_250_modulationMode');
 }
 
@@ -71,7 +71,7 @@ if (is_numeric($txModulation) && is_numeric($rxModulation)) {
 //     );
 
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-250-dataRate', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-250-dataRate', $tags, $fields);
 //     $os->enableGraph('cambium_250_dataRate');
 // }
 
@@ -83,6 +83,6 @@ if (is_numeric($ssr)) {
     ];
 
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-250-ssr', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-250-ssr', $tags, $fields);
     $os->enableGraph('cambium_250_ssr');
 }

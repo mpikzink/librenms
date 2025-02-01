@@ -21,7 +21,7 @@ use LibreNMS\Util\Number;
 //         'cambiumSTADLSNR' => $cambiumSTADLSNR
 //     );
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-epmp-RFStatus', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-epmp-RFStatus', $tags, $fields);
 //     $os->enableGraph('cambium_epmp_RFStatus');
 // }
 
@@ -36,7 +36,7 @@ if (is_numeric($cambiumGPSNumTrackedSat) && is_numeric($cambiumGPSNumVisibleSat)
         'numVisible' => $cambiumGPSNumVisibleSat,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-epmp-gps', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-epmp-gps', $tags, $fields);
     $os->enableGraph('cambium_epmp_gps');
 }
 
@@ -51,7 +51,7 @@ if (is_numeric($cambiumSTAUplinkMCSMode) && is_numeric($cambiumSTADownlinkMCSMod
         'downlinkMCSMode' => $cambiumSTADownlinkMCSMode,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-epmp-modulation', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-epmp-modulation', $tags, $fields);
     $os->enableGraph('cambium_epmp_modulation');
 }
 
@@ -62,7 +62,7 @@ if (is_numeric($cambiumSTAUplinkMCSMode) && is_numeric($cambiumSTADownlinkMCSMod
 //         'regSM' => $registeredSM,
 //     );
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-epmp-registeredSM', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-epmp-registeredSM', $tags, $fields);
 //     $os->enableGraph('cambium_epmp_registeredSM');
 // }
 
@@ -80,7 +80,7 @@ if (is_numeric($sysNetworkEntryAttempt) && is_numeric($sysNetworkEntrySuccess) &
         'authFailure' => $sysNetworkEntryAuthenticationFailure,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-epmp-access', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-epmp-access', $tags, $fields);
     $os->enableGraph('cambium_epmp_access');
 }
 
@@ -91,7 +91,7 @@ if (is_numeric($gpsSync)) {
         'gpsSync' => $gpsSync,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-epmp-gpsSync', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-epmp-gpsSync', $tags, $fields);
     $os->enableGraph('cambium_epmp_gpsSync');
 }
 
@@ -102,7 +102,7 @@ if (is_numeric($gpsSync)) {
 //         'freq' => $freq,
 //     );
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-epmp-freq', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-epmp-freq', $tags, $fields);
 //     $os->enableGraph('cambium_epmp_freq');
 // }
 
@@ -126,7 +126,7 @@ if (is_numeric($ulWLanTotalAvailableFrameTimePerSecond) && is_numeric($ulWLanTot
         'dlwlanframeutilization' => $dlWlanFrameUtilization,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-epmp-frameUtilization', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-epmp-frameUtilization', $tags, $fields);
     $os->enableGraph('cambium-epmp-frameUtilization');
 }
 unset($multi_get_array, $ulWlanFrameUtilization, $ulWLanTotalAvailableFrameTimePerSecond, $ulWLanTotalUsedFrameTimePerSecond, $dlWlanFrameUtilization, $dlWLanTotalAvailableFrameTimePerSecond, $dlWLanTotalUsedFrameTimePerSecond);

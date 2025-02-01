@@ -18,7 +18,7 @@ use LibreNMS\RRD\RrdDefinition;
 //         'transmitPower' => $transmitPower / 10,
 //     );
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-650-transmitPower', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-650-transmitPower', $tags, $fields);
 //     $os->enableGraph('cambium_650_transmitPower');
 // }
 
@@ -29,7 +29,7 @@ use LibreNMS\RRD\RrdDefinition;
 //         'rawReceivePower' => $rawReceivePower / 10,
 //     );
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-650-rawReceivePower', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-650-rawReceivePower', $tags, $fields);
 //     $os->enableGraph('cambium_650_rawReceivePower');
 // }
 
@@ -44,7 +44,7 @@ if (is_numeric($txModulation) && is_numeric($rxModulation)) {
         'rxModulation' => $rxModulation,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-650-modulationMode', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-650-modulationMode', $tags, $fields);
     $os->enableGraph('cambium_650_modulationMode');
 }
 
@@ -62,7 +62,7 @@ if (is_numeric($txModulation) && is_numeric($rxModulation)) {
 //         'aggregateDataRate' => $aggregateDataRate / 100,
 //     );
 //     $tags = compact('rrd_def');
-//     data_update($device, 'cambium-650-dataRate', $tags, $fields);
+//     app('Datastore')->put($device, 'cambium-650-dataRate', $tags, $fields);
 //     $os->enableGraph('cambium_650_dataRate');
 // }
 
@@ -73,7 +73,7 @@ if (is_numeric($ssr)) {
         'ssr' => $ssr,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-650-ssr', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-650-ssr', $tags, $fields);
     $os->enableGraph('cambium_650_ssr');
 }
 
@@ -105,6 +105,6 @@ if (is_numeric($ssr)) {
 //     'gps' => $gps,
 //         );
 //         $tags = compact('rrd_def');
-//         data_update($device, 'cambium-650-gps', $tags, $fields);
+//         app('Datastore')->put($device, 'cambium-650-gps', $tags, $fields);
 //             $os->enableGraph('cambium_650_gps');
 // }

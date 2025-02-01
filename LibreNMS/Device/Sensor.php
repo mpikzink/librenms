@@ -641,7 +641,7 @@ class Sensor implements DiscoveryModule, PollerModule
                 'rrd_name' => $rrd_name,
                 'rrd_def' => $rrd_def,
             ];
-            data_update($os->getDeviceArray(), static::$data_name, $tags, $fields);
+            app('Datastore')->put($os->getDeviceArray(), static::$data_name, $tags, $fields);
 
             $update = [
                 'sensor_prev' => $sensor['sensor_current'],

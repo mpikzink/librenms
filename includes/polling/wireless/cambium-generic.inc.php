@@ -22,7 +22,7 @@ if (strstr($hardware, 'CMM') == false) {
             'fecOutErrorsCount' => $fecOutErrorsCount,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-errorCount', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-errorCount', $tags, $fields);
         $os->enableGraph('cambium_generic_errorCount');
         unset($rrd_filename, $fecInErrorsCount, $fecOutErrorsCount);
     }
@@ -34,7 +34,7 @@ if (strstr($hardware, 'CMM') == false) {
             'crcErrors' => $crcErrors,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-crcErrors', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-crcErrors', $tags, $fields);
         $os->enableGraph('cambium_generic_crcErrors');
     }
 
@@ -52,7 +52,7 @@ if (strstr($hardware, 'CMM') == false) {
             'combined' => $combined,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-signalHV', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-signalHV', $tags, $fields);
         $os->enableGraph('cambium_generic_signalHV');
         unset($rrd_filename, $vertical, $horizontal, $combined);
     }
@@ -64,7 +64,7 @@ if (strstr($hardware, 'CMM') == false) {
             'rssi' => $rssi,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-rssi', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-rssi', $tags, $fields);
         $os->enableGraph('cambium_generic_rssi');
         unset($rrd_filename, $rssi);
     }
@@ -76,7 +76,7 @@ if (strstr($hardware, 'CMM') == false) {
             'jitter' => $jitter,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-jitter', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-jitter', $tags, $fields);
         $os->enableGraph('cambium_generic_jitter');
         unset($rrd_filename, $jitter);
     }
@@ -92,7 +92,7 @@ if (strstr($hardware, 'CMM') == false) {
             'vertical' => $vertical,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-450-slaveHV', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-450-slaveHV', $tags, $fields);
         $os->enableGraph('cambium_generic_450_slaveHV');
         unset($rrd_filename, $horizontal, $vertical);
     }
@@ -104,7 +104,7 @@ if (strstr($hardware, 'CMM') == false) {
             'ssr' => $ssr,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-450-slaveSSR', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-450-slaveSSR', $tags, $fields);
         $os->enableGraph('cambium_generic_450_slaveSSR');
         unset($rrd_filename, $ssr);
     }
@@ -120,7 +120,7 @@ if (strstr($hardware, 'CMM') == false) {
             'vertical' => $vertical,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-450-slaveSNR', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-450-slaveSNR', $tags, $fields);
         $os->enableGraph('cambium_generic_450_slaveSNR');
         unset($rrd_filename, $horizontal, $vertical);
     }
@@ -141,7 +141,7 @@ if (strstr($hardware, 'AP') || strstr($hardware, 'Master') || strstr($hardware, 
             'whispGPSStats' => $gpsStatus,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-whispGPSStats', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-whispGPSStats', $tags, $fields);
         $os->enableGraph('cambium_generic_whispGPSStats');
         unset($rrd_filename, $gpsStatus);
     }
@@ -157,7 +157,7 @@ if (strstr($hardware, 'AP') || strstr($hardware, 'Master') || strstr($hardware, 
             'tracked' => floatval($tracked),
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-gpsStats', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-gpsStats', $tags, $fields);
         $os->enableGraph('cambium_generic_gpsStats');
         unset($rrd_filename, $visible, $tracked);
     }
@@ -170,7 +170,7 @@ if (is_numeric($lastLevel)) {
         'last' => $lastLevel,
     ];
     $tags = compact('rrd_def');
-    data_update($device, 'cambium-generic-450-powerlevel', $tags, $fields);
+    app('Datastore')->put($device, 'cambium-generic-450-powerlevel', $tags, $fields);
     $os->enableGraph('cambium_generic_450_powerlevel');
     unset($lastLevel);
 }
@@ -187,7 +187,7 @@ if (strstr($version, 'AP') == false) {
             'vertical' => $vertical,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-450-linkRadioDbm', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-450-linkRadioDbm', $tags, $fields);
         $os->enableGraph('cambium_generic_450_linkRadioDbm');
         unset($rrd_filename, $horizontal, $horizontal);
     }
@@ -203,7 +203,7 @@ if (strstr($version, 'AP') == false) {
             'vertical' => $vertical,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-450-ptpSNR', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-450-ptpSNR', $tags, $fields);
         $os->enableGraph('cambium_generic_450_ptpSNR');
         unset($rrd_filename, $horizontal, $horizontal);
     }
@@ -215,7 +215,7 @@ if (strstr($version, 'AP') == false) {
             'ssr' => $ssr,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-450-masterSSR', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-450-masterSSR', $tags, $fields);
         $os->enableGraph('cambium_generic_450_masterSSR');
         unset($rrd_filename, $ssr);
     }
@@ -239,7 +239,7 @@ if (strstr($version, 'AP') == false) {
                 'avg' => $avgRadio,
             ];
             $tags = compact('rrd_def');
-            data_update($device, 'cambium-generic-radioDbm', $tags, $fields);
+            app('Datastore')->put($device, 'cambium-generic-radioDbm', $tags, $fields);
             $os->enableGraph('cambium_generic_radioDbm');
             unset($rrd_filename, $dbmRadio, $minRadio, $maxRadio, $avgRadio);
         }
@@ -259,7 +259,7 @@ if (strstr($version, 'AP')) {
             'failed' => $failed,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-regCount', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-regCount', $tags, $fields);
         $os->enableGraph('cambium_generic_regCount');
         unset($rrd_filename, $registered, $failed);
     }
@@ -276,7 +276,7 @@ if (strstr($version, 'AP')) {
             'freq' => $freq,
         ];
         $tags = compact('rrd_def');
-        data_update($device, 'cambium-generic-freq', $tags, $fields);
+        app('Datastore')->put($device, 'cambium-generic-freq', $tags, $fields);
         $os->enableGraph('cambium_generic_freq');
         unset($rrd_filename, $freq);
     }

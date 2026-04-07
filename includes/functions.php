@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LibreNMS\Enum\Severity;
-use LibreNMS\Util\Time;
 
 /**
  * Parse cli discovery or poller modules and set config for this run

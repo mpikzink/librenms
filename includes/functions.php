@@ -271,11 +271,6 @@ function port_fill_missing_and_trim(&$port, $device)
     }
 }
 
-function convert_delay($delay)
-{
-    return Time::durationToSeconds($delay);
-}
-
 function normalize_snmp_ip_address($data)
 {
     // $data is received from snmpwalk, can be ipv4 xxx.xxx.xxx.xxx or ipv6 xx:xx:...:xx (16 chunks)

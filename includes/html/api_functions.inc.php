@@ -68,6 +68,7 @@ use LibreNMS\Util\IP;
 use LibreNMS\Util\IPv4;
 use LibreNMS\Util\Mac;
 use LibreNMS\Util\Number;
+use LibreNMS\Util\Time;
 
 function api_success($result, $result_name, $message = null, $code = 200, $count = null, $extra = null): JsonResponse
 {
@@ -1649,8 +1650,8 @@ function add_edit_rule(Illuminate\Http\Request $request)
     $override_query = $data['override_query'];
     $adv_query = $data['adv_query'];
     $notes = strip_tags((string) $data['notes']);
-    $delay_sec = convert_delay($delay);
-    $interval_sec = convert_delay($interval);
+    $delay_sec = Time::durationToSeconds($delay);
+    $interval_sec = Time::durationToSeconds($interval);
     if ($mute == 1) {
         $mute = true;
     } else {

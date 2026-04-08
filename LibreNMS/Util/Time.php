@@ -161,7 +161,7 @@ class Time
 
     public static function durationToSeconds(string $duration): int
     {
-        if (! preg_match('/^(\d+)([mhd]?)$/', $duration, $matches)) {
+        if (! preg_match('/(\d+)([mhd]?)/', $duration, $matches)) {
             return $duration === '' ? 0 : 300;
         }
 

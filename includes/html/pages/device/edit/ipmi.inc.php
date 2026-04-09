@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use Illuminate\Support\Facades\Gate;
 
 if ($_POST['editing']) {

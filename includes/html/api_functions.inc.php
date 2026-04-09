@@ -1271,7 +1271,7 @@ function update_port_description(Illuminate\Http\Request $request)
     if ($description == 'repoll') {
         // No description provided, clear description
         $device->forgetAttrib('ifName:' . $port->ifName);
-        Eventlog::log("$ifName Port ifAlias cleared via API", $port->device_id, 'interface', Severity::Notice, $port->port_id);
+        Eventlog::log("$port->ifName Port ifAlias cleared via API", $port->device_id, 'interface', Severity::Notice, $port->port_id);
 
         return api_success_noresult(200, 'Port description cleared.');
     } else {

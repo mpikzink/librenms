@@ -523,27 +523,6 @@ function lock_and_purge_query($table, $sql, $msg)
 }
 
 /**
- * Check if disk is valid to poll.
- * Settings: bad_disk_regexp
- *
- * @param  array  $disk
- * @param  array  $device
- * @return bool
- */
-function is_disk_valid($disk, $device)
-{
-    foreach (LibrenmsConfig::getCombined($device['os'], 'bad_disk_regexp') as $bir) {
-        if (preg_match($bir . 'i', (string) $disk['diskIODevice'])) {
-            Log::debug('Ignored Disk: ' . $disk['diskIODevice'] . ' (matched: ' . $bir . ')');
-
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
  * Take a BGP error code and subcode to return a string representation of it
  *
  * @params int code

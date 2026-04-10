@@ -19,53 +19,6 @@ use Illuminate\Support\Str;
 use LibreNMS\Enum\Severity;
 use LibreNMS\Util\Time;
 
-/**
- * Parse cli discovery or poller modules and set config for this run
- *
- * @param  string  $type  discovery or poller
- * @param  array  $options  get_opts array (only m key is checked)
- * @return bool
- */
-function parse_modules($type, $options)
-{
-    $override = false;
-
-    if (! empty($options['m'])) {
-        // get all modules in the correct order and disable all
-        $modules = array_map(fn ($v) => false, LibrenmsConfig::get("{$type}_modules", []));
-
-        foreach (explode(',', (string) $options['m']) as $module) {
-            // parse submodules (only supported by some modules)
-            if (Str::contains($module, '/')) {
-                [$module, $submodule] = explode('/', $module, 2);
-                $existing_submodules = LibrenmsConfig::get("{$type}_submodules.$module", []);
-                $existing_submodules[] = $submodule;
-                LibrenmsConfig::set("{$type}_submodules.$module", $existing_submodules);
-            }
-
-            $dir = $type == 'poller' ? 'polling' : $type;
-            if (is_file("includes/$dir/$module.inc.php")) {
-                $modules[$module] = true; // enable module
-                $override = true;
-            }
-        }
-
-        // filter disabled modules and set in global config
-        LibrenmsConfig::set("{$type}_modules", array_filter($modules));
-
-        // display selected modules
-        $modules = array_map(function ($module) use ($type) {
-            $submodules = LibrenmsConfig::get("{$type}_submodules.$module");
-
-            return $module . ($submodules ? '(' . implode(',', $submodules) . ')' : '');
-        }, array_keys(LibrenmsConfig::get("{$type}_modules", [])));
-
-        Log::debug('Override ' . $type . ' modules: ' . implode(', ', $modules));
-    }
-
-    return $override;
-}
-
 function renamehost($id, $new, $source = 'console')
 {
     $host = DeviceCache::get((int) $id)->hostname;

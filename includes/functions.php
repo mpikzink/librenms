@@ -230,17 +230,6 @@ function convert_delay($delay)
     return Time::durationToSeconds($delay);
 }
 
-function fix_integer_value($value)
-{
-    if ($value < 0) {
-        $return = 4294967296 + $value;
-    } else {
-        $return = $value;
-    }
-
-    return $return;
-}
-
 /**
  * Checks if the $hostname provided exists in the DB already
  */

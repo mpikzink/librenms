@@ -230,14 +230,6 @@ function convert_delay($delay)
     return Time::durationToSeconds($delay);
 }
 
-function normalize_snmp_ip_address($data)
-{
-    // $data is received from snmpwalk, can be ipv4 xxx.xxx.xxx.xxx or ipv6 xx:xx:...:xx (16 chunks)
-    // ipv4 is returned unchanged, ipv6 is returned with one ':' removed out of two, like
-    //  xxxx:xxxx:...:xxxx (8 chuncks)
-    return preg_replace('/([0-9a-fA-F]{2}):([0-9a-fA-F]{2})/', '\1\2', explode('%', (string) $data, 2)[0]);
-}
-
 function fix_integer_value($value)
 {
     if ($value < 0) {

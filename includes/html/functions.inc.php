@@ -479,17 +479,6 @@ function generate_pagination($count, $limit, $page, $links = 2)
     return $return;
 }//end generate_pagination()
 
-function get_client_ip()
-{
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $client_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $client_ip = $_SERVER['REMOTE_ADDR'];
-    }
-
-    return $client_ip;
-}//end get_client_ip()
-
 function clean_bootgrid($string)
 {
     $output = str_replace(["\r", "\n"], '', $string);

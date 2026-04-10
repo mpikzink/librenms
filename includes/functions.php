@@ -231,18 +231,6 @@ function convert_delay($delay)
 }
 
 /**
- * Checks if the $hostname provided exists in the DB already
- */
-function host_exists(string $hostname, ?string $sysName = null): bool
-{
-    return Device::where('hostname', $hostname)
-        ->when(! empty($sysName), function ($query) use ($sysName): void {
-            $query->when(! LibrenmsConfig::get('allow_duplicate_sysName'), fn ($q) => $q->orWhere('sysName', $sysName))
-                  ->when(! empty(LibrenmsConfig::get('mydomain')), fn ($q) => $q->orWhere('sysName', rtrim((string) $sysName, '.') . '.' . LibrenmsConfig::get('mydomain')));
-        })->exists();
-}
-
-/**
  * Create a new state index.  Update translations if $states is given.
  *
  * For for backward compatibility:

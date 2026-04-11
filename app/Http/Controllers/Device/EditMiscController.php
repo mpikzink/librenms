@@ -26,6 +26,7 @@
 
 namespace App\Http\Controllers\Device;
 
+use App\Http\Interfaces\ToastInterface;
 use App\Http\Requests\UpdateDeviceMiscRequest;
 use App\Models\Device;
 use Illuminate\Contracts\View\View;
@@ -59,7 +60,7 @@ class EditMiscController
         $this->updateAttribute($device, 'override_rrdtool_tune', $request->validated('override_rrdtool_tune'));
         $this->updateAttribute($device, 'selected_ports', $request->validated('selected_ports'));
 
-        toast()->success(__('Device record updated'));
+        ToastInterface::success(__('Device record updated'));
 
         return response()->redirectToRoute('device.edit.misc', ['device' => $device->device_id]);
     }

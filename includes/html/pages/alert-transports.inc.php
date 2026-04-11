@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Interfaces\ToastInterface;
 use App\Models\AlertTransport;
 use Illuminate\Support\Facades\Gate;
 
@@ -17,9 +18,9 @@ if (Gate::allows('create', AlertTransport::class)) {
             if (class_exists($class)) {
                 $transport = app($class);
                 if ($transport->handleOauth($request)) {
-                    toast()->sucess("$transport_name added successfully.");
+                    ToastInterface::sucess("$transport_name added successfully.");
                 } else {
-                    toast()->error("$transport_name was not added. Check the log for details.");
+                    ToastInterface::error("$transport_name was not added. Check the log for details.");
                 }
             }
         }

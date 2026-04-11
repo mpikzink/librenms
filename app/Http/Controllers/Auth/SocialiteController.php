@@ -25,6 +25,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Facades\LibrenmsConfig;
 use App\Http\Controllers\Controller;
+use App\Http\Interfaces\ToastInterface;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class SocialiteController extends Controller
         if (array_key_exists('error', $request->query())) {
             $error = $request->query('error');
             $error_description = $request->query('error_description');
-            toast()->error($error . ': ' . $error_description);
+            ToastInterface::error($error . ': ' . $error_description);
 
             return redirect()->route('login')->with('block_auto_redirect', true);
         }
@@ -122,7 +123,7 @@ class SocialiteController extends Controller
 
             return redirect()->intended();
         } catch (AuthenticationException $e) {
-            toast()->error($e->getMessage());
+            ToastInterface::error($e->getMessage());
 
             return redirect()->route('login')->with('block_auto_redirect', true);
         }

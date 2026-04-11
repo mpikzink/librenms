@@ -28,6 +28,7 @@ namespace App\Http\Controllers\Device;
 
 use App\Facades\LibrenmsConfig;
 use App\Facades\Rrd;
+use App\Http\Interfaces\ToastInterface;
 use App\Http\Requests\UpdateDeviceRequest;
 use App\Models\Device;
 use App\Models\DeviceGroup;
@@ -128,13 +129,13 @@ class EditDeviceController
         try {
             if ($device->isDirty()) {
                 if ($device->save()) {
-                    toast()->success(__('Device record updated'));
+                    ToastInterface::success(__('Device record updated'));
                 } else {
-                    toast()->error(__('Device record update error'));
+                    ToastInterfac::error(__('Device record update error'));
                 }
             }
         } catch (HostRenameException $e) {
-            toast()->error($e->getMessage());
+            ToastInterface::error($e->getMessage());
         }
 
         return response()->redirectToRoute('device', ['device' => $device->device_id, 'edit']);

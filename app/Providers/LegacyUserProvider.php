@@ -26,6 +26,7 @@
 
 namespace App\Providers;
 
+use App\Http\Interfaces\ToastInterface;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -143,7 +144,7 @@ class LegacyUserProvider implements UserProvider
             if (Debug::isEnabled()) {
                 $auth_message .= '<br /> ' . $ae->getFile() . ': ' . $ae->getLine();
             }
-            toast()->error($auth_message);
+            ToastInterface::error($auth_message);
 
             $username = Session::get('username', $credentials['username']);
 
@@ -180,7 +181,7 @@ class LegacyUserProvider implements UserProvider
                 $auth_id = $auth->getUserid($username);
                 $new_user = $auth->getUser($auth_id);
             } catch (AuthenticationException $ae) {
-                toast()->error($ae->getMessage());
+                ToastInterface::error($ae->getMessage());
             }
 
             if (empty($new_user)) {

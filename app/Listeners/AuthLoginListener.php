@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Http\Interfaces\ToastInterface;
 use App\Models\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,6 @@ class AuthLoginListener
 
         DB::table('authlog')->insert(['user' => $user->username ?: '', 'address' => Request::ip(), 'result' => 'Logged In']);
 
-        toast()->info('Welcome ' . ($user->realname ?: $user->username));
+        ToastInterface::info('Welcome ' . ($user->realname ?: $user->username));
     }
 }

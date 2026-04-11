@@ -30,6 +30,8 @@ use Illuminate\Session\SessionManager;
 
 class ToastInterface
 {
+    private const LEVELS = ['info', 'success', 'warning', 'error'];
+
     public function __construct(
         private readonly SessionManager $session
     ) {
@@ -40,24 +42,12 @@ class ToastInterface
         return app(self::class)->$name(...$arguments);
     }
 
-    public function info(string $title, ?string $message = null, ?array $options = null): static
+    public function __call(string $name, array $arguments): static
     {
-        return $this->message('info', $title, $message, $options);
-    }
-
-    public function success(string $title, ?string $message = null, ?array $options = null): static
-    {
-        return $this->message('success', $title, $message, $options);
-    }
-
-    public function error(string $title, ?string $message = null, ?array $options = null): static
-    {
-        return $this->message('error', $title, $message, $options);
-    }
-
-    public function warning(string $title, ?string $message = null, ?array $options = null): static
-    {
-        return $this->message('warning', $title, $message, $options);
+        if (in_array($name, self::LEVELS)) {
+            return $this->message($name, ...$arguments);
+        }
+        throw new \BadMethodCallException("Method {$name} does not exist.");
     }
 
     private function message(string $level, string $title, ?string $message = null, ?array $options = null): static

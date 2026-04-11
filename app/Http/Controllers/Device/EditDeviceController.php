@@ -131,7 +131,7 @@ class EditDeviceController
                 if ($device->save()) {
                     ToastInterface::success(__('Device record updated'));
                 } else {
-                    ToastInterfac::error(__('Device record update error'));
+                    ToastInterface::error(__('Device record update error'));
                 }
             }
         } catch (HostRenameException $e) {

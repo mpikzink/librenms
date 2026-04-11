@@ -35,6 +35,11 @@ class ToastInterface
     ) {
     }
 
+    public static function __callStatic(string $name, array $arguments): static
+    {
+        return app(self::class)->$name(...$arguments);
+    }
+
     public function info(string $title, ?string $message = null, ?array $options = null): static
     {
         return $this->message('info', $title, $message, $options);
@@ -55,7 +60,7 @@ class ToastInterface
         return $this->message('warning', $title, $message, $options);
     }
 
-    public function message(string $level, string $title, ?string $message = null, ?array $options = null): static
+    private function message(string $level, string $title, ?string $message = null, ?array $options = null): static
     {
         $notifications = $this->session->get('toasts', []);
         array_push($notifications, [

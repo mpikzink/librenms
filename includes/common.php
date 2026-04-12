@@ -173,9 +173,9 @@ function device_by_name($name)
     return device_by_id_cache(getidbyname($name));
 }
 
-function device_by_id_cache($device_id, $refresh = false)
+function device_by_id_cache($device_id)
 {
-    $model = $refresh ? DeviceCache::refresh((int) $device_id) : DeviceCache::get((int) $device_id);
+    $model = DeviceCache::get((int) $device_id);
 
     $device = $model->toArray();
     $device['location'] = $model->location->location ?? null;

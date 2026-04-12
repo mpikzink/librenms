@@ -46,7 +46,7 @@ if (isset($options['h'])) {
 if (isset($hostname)) {
     $device = DeviceCache::get($hostname);
 
-    if (isset($device->os) && $device->os != 'generic') {
+    if ($device->os != 'generic') {
         $target_os = $device->os;
     } elseif (isset($options['o'])) {
         $target_os = $options['o'];

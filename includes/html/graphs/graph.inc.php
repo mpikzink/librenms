@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
 use Illuminate\Support\Str;
 use LibreNMS\Data\Graphing\GraphParameters;
@@ -7,11 +8,9 @@ use LibreNMS\Enum\ImageFormat;
 
 try {
     if (isset($vars['device'])) {
-        $device = is_numeric($vars['device'])
-            ? device_by_id_cache($vars['device'])
-            : device_by_name($vars['device']);
-        if (isset($device['device_id'])) {
-            DeviceCache::setPrimary($device['device_id']);
+        $device = is_numeric($vars['device']) ? DeviceCache::get($vars['device']) : DeviceCache::getByHostname($vars['device']);
+        if (isset($device->device_id)) {
+            DeviceCache::setPrimary($device->device_id);
         }
     }
 
@@ -64,7 +63,7 @@ try {
     }
 
     // check after auth
-    if (isset($vars['device']) && empty($device['device_id'])) {
+    if (isset($vars['device']) && empty($device->device_id)) {
         throw new \LibreNMS\Exceptions\RrdGraphException('Device not found');
     }
 

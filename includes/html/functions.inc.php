@@ -14,10 +14,9 @@ use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
 use App\Facades\PortCache;
 use App\Models\Bill;
-use App\Models\Device;
+uss App\Models\Device;
 use App\Models\Port;
 use Illuminate\Support\Facades\Gate;
-use LibreNMS\Cache\Device as CacheDevice;
 use LibreNMS\Enum\ImageFormat;
 use LibreNMS\Util\Number;
 use LibreNMS\Util\Rewrite;
@@ -840,7 +839,7 @@ function get_oxidized_nodes_list()
     $data = json_decode(file_get_contents(LibrenmsConfig::get('oxidized.url') . '/nodes?format=json', false, $context), true);
 
     foreach ($data as $object) {
-        $device = CacheDevice::getByHostname($object['name']);
+        $device = DeviceCache::getByHostname($object['name']);
         if (! device_permitted($device->device_id)) {
             //user cannot see this device, so let's skip it.
             continue;

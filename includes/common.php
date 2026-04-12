@@ -175,14 +175,7 @@ function device_by_name($name)
 
 function device_by_id_cache($device_id)
 {
-    $model = DeviceCache::get((int) $device_id);
-
-    $device = $model->toArray();
-    $device['location'] = $model->location->location ?? null;
-    $device['lat'] = $model->location->lat ?? null;
-    $device['lng'] = $model->location->lng ?? null;
-
-    return $device;
+    return DeviceCache::get((int) $device_id)->toArray();
 }
 
 function getidbyname($hostname)

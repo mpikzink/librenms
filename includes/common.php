@@ -168,9 +168,9 @@ function ifclass($ifOperStatus, $ifAdminStatus)
     return \LibreNMS\Util\Url::portLinkDisplayClass((object) ['ifOperStatus' => $ifOperStatus, 'ifAdminStatus' => $ifAdminStatus]);
 }
 
-function device_by_name($name)
+function device_by_name($hostname)
 {
-    return device_by_id_cache(getidbyname($name));
+    return DeviceCache::getByHostname($hostname)->toArray();
 }
 
 function device_by_id_cache($device_id)

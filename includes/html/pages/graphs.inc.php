@@ -25,7 +25,7 @@ $subtype = basename($graphtype['subtype']);
 $id = $vars['id'] ?? null;
 
 if (isset($vars['device'])) {
-    $device = is_numeric($vars['device']) ? DeviceCache::get($vars['device']) : DeviceCache::geyByHostname($vars['device']);
+    $device = DeviceCache::get($vars['device']);
 }
 
 $auth = false;

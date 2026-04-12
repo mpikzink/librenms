@@ -14,7 +14,7 @@ use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
 use App\Facades\PortCache;
 use App\Models\Bill;
-uss App\Models\Device;
+use App\Models\Device;
 use App\Models\Port;
 use Illuminate\Support\Facades\Gate;
 use LibreNMS\Enum\ImageFormat;

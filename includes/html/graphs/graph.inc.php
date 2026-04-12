@@ -8,8 +8,8 @@ use LibreNMS\Enum\ImageFormat;
 
 try {
     if (isset($vars['device'])) {
-        $device = is_numeric($vars['device']) ? DeviceCache::get($vars['device']) : DeviceCache::getByHostname($vars['device']);
-        if (isset($device->device_id)) {
+        $device = DeviceCache::get($vars['device']);
+        if ($device->exists) {
             DeviceCache::setPrimary($device->device_id);
         }
     }
@@ -63,7 +63,7 @@ try {
     }
 
     // check after auth
-    if (isset($vars['device']) && empty($device->device_id)) {
+    if (isset($vars['device']) && $device->exists === false) {
         throw new \LibreNMS\Exceptions\RrdGraphException('Device not found');
     }
 

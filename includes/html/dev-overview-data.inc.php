@@ -8,7 +8,7 @@ use LibreNMS\Util\Clean;
 use LibreNMS\Util\IP;
 use LibreNMS\Util\Time;
 
-$device = DeviceCachee::getPrimary();
+$device = DeviceCache::getPrimary();
 
 echo "<div class='row'>
       <div class='col-md-12'>

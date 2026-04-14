@@ -19,9 +19,7 @@ use LibreNMS\Util\Rewrite;
  * @author     LibreNMS Contributors
 */
 
-$hostname = DeviceCache::get((int) $entry['device_id'])->hostname;
-
-unset($icon);
+$device = DeviceCache::get((int) $entry['device_id']);
 
 $severity_colour = eventlog_severity($entry['severity']);
 $icon = '<span class="alert-status ' . $severity_colour . '"></span>';
@@ -30,9 +28,8 @@ echo '<tr>';
 echo '<td>' . $icon . '</td>';
 echo '<td style="vertical-align: middle;">' . $entry['datetime'] . '</td>';
 
-if (! isset($vars['device'])) {
-    $dev = device_by_id_cache($entry['device_id']);
-    echo '<td style="vertical-align: middle;">' . generate_device_link($dev, shorthost($dev['hostname'])) . '</td>';
+if ($device) {
+    echo '<td style="vertical-align: middle;">' . generate_device_link($device, $device->shortDisplayName()) . '</td>';
 }
 
 if ($entry['type'] == 'interface') {

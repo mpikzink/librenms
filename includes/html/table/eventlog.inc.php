@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\DeviceCache;
 use LibreNMS\Util\Rewrite;
 
 /*
@@ -74,7 +75,7 @@ if ($rowCount != -1) {
 $sql = "SELECT `E`.*,DATE_FORMAT(datetime, '" . \App\Facades\LibrenmsConfig::get('dateformat.mysql.compact') . "') as humandate,severity $sql";
 
 foreach (dbFetchRows($sql, $param) as $eventlog) {
-    $dev = device_by_id_cache($eventlog['device_id']);
+    $device = DeviceCache::get($eventlog['device_id']);
     if ($eventlog['type'] == 'interface') {
         $this_if = cleanPort(get_port_by_id($eventlog['reference']));
         $type = '<b>' . generate_port_link($this_if, Rewrite::shortenIfName(strtolower((string) $this_if['label']))) . '</b>';
@@ -89,7 +90,7 @@ foreach (dbFetchRows($sql, $param) as $eventlog) {
 
     $response[] = [
         'datetime' => "<span class='alert-status " . eventlog_severity($severity_colour) . " eventlog-status'></span>" . $eventlog['humandate'],
-        'hostname' => generate_device_link($dev, shorthost($dev['hostname'])),
+        'hostname' => generate_device_link($device, $device->shortDisplayName()),
         'type' => $type,
         'message' => htmlspecialchars((string) $eventlog['message']),
         'username' => $eventlog['username'],

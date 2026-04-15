@@ -2,4 +2,4 @@
 
 $class = \LibreNMS\Enum\Sensor::Ber;
 
-require 'sensors.inc.php';
+require 'includes/html/pages/device/health/sensors.inc.php';

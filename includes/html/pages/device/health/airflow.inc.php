@@ -25,4 +25,4 @@
  */
 $class = \LibreNMS\Enum\Sensor::Airflow;
 
-require 'sensors.inc.php';
+require 'includes/html/pages/device/health/sensors.inc.php';

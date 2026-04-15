@@ -1,10 +1,11 @@
 <?php
 
+use App\Facades\PortCache;
 use LibreNMS\Exceptions\RrdGraphException;
 use LibreNMS\Util\Rewrite;
 
 if (is_numeric($vars['id']) && ($auth || port_permitted($vars['id']))) {
-    $port = cleanPort(get_port_by_id($vars['id']));
+    $port = cleanPort(PortCache::get($vars['id'])->toArray());
     $device = device_by_id_cache($port['device_id']);
 
     if (empty($device['device_id'])) {

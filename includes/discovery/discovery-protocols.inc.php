@@ -1,10 +1,12 @@
 <?php
 
 use App\Facades\LibrenmsConfig;
+use App\Facades\PortCache;
 use App\Models\Link;
 use App\Models\Ospfv3Nbr;
 use LibreNMS\Util\IP;
 use LibreNMS\Util\StringHelpers;
+use LibreNMS\Util\Validate;
 
 global $link_exists;
 
@@ -116,7 +118,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
             }
 
             $local_port_id = find_port_id($lldp_ports['mtxrInterfaceStatsName'][hexdec($lldp_ports_num['mtxrNeighborInterfaceID'][$key])], null, $device['device_id']);
-            $interface = get_port_by_id($local_port_id);
+            $interface = PortCache::get($local_port_id);
 
             if ($lldp['lldpRemPortIdSubtype'] == 3) { // 3 = macaddress
                 $remote_port_mac = str_replace([' ', ':', '-'], '', strtolower((string) $lldp['lldpRemPortId']));
@@ -131,10 +133,10 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                 $remote_device_id = discover_new_device($lldp['lldpRemSysName'], $device, 'LLDP', $interface);
             }
 
-            if ($interface['port_id'] && $lldp['lldpRemSysName'] && $lldp['lldpRemPortId']) {
+            if ($interface?->port_id && $lldp['lldpRemSysName'] && $lldp['lldpRemPortId']) {
                 $remote_port_id = find_port_id($lldp['lldpRemPortDesc'] ?? '', $lldp['lldpRemPortId'], $remote_device_id);
                 discover_link(
-                    $interface['port_id'],
+                    $interface->port_id,
                     'lldp',
                     $remote_port_id,
                     $lldp['lldpRemSysName'],
@@ -245,7 +247,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
             $remote_port_id = find_port_id($remote_port_descr, null, $remote_device_id);
 
             if (! $remote_device_id &&
-                    \LibreNMS\Util\Validate::hostname($remote_device_name) &&
+                    Validate::hostname($remote_device_name) &&
                     ! can_skip_discovery($remote_device_name, $remote_device_ip) &&
                     LibrenmsConfig::get('autodiscovery.xdp') === true) {
                 $remote_device_id = discover_new_device($remote_device_name, $device, 'LLDP', $interface);
@@ -372,7 +374,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
             } else {
                 $local_port_id = find_port_id($lldp_ports[$entry_key]['lldpLocPortId'] ?? null, $ifIndex, $device['device_id']);
             }
-            $interface = get_port_by_id($local_port_id);
+            $interface = PortCache::get($local_port_id);
 
             d_echo($lldp_instance);
 

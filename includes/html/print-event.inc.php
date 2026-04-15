@@ -1,7 +1,9 @@
 <?php
 
 use App\Facades\DeviceCache;
+use App\Facades\PortCache;
 use LibreNMS\Util\Rewrite;
+use LibreNMS\Util\Url;
 
 /*
  * LibreNMS
@@ -36,7 +38,7 @@ if (! isset($vars['device'])) {
 }
 
 if ($entry['type'] == 'interface') {
-    $this_if = cleanPort(get_port_by_id($entry['reference']));
+    $this_if = cleanPort(PortCache::get($entry['reference'])->toArray());
     $entry['link'] = '<b>' . generate_port_link($this_if, Rewrite::shortenIfName(strtolower((string) $this_if['label']))) . '</b>';
 } else {
     $entry['link'] = 'System';

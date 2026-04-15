@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\PortCache;
 use LibreNMS\Util\Rewrite;
 
 /*
@@ -76,7 +77,7 @@ $sql = "SELECT `E`.*,DATE_FORMAT(datetime, '" . \App\Facades\LibrenmsConfig::get
 foreach (dbFetchRows($sql, $param) as $eventlog) {
     $dev = device_by_id_cache($eventlog['device_id']);
     if ($eventlog['type'] == 'interface') {
-        $this_if = cleanPort(get_port_by_id($eventlog['reference']));
+        $this_if = cleanPort(PortCache::get((int) $eventlog['reference'])->toArray());
         $type = '<b>' . generate_port_link($this_if, Rewrite::shortenIfName(strtolower((string) $this_if['label']))) . '</b>';
     } else {
         $type = $eventlog['type'];

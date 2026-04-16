@@ -3,7 +3,6 @@
 use App\Facades\DeviceCache;
 use App\Facades\PortCache;
 use LibreNMS\Util\Rewrite;
-use LibreNMS\Util\Url;
 
 /*
  * LibreNMS

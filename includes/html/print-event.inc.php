@@ -2,6 +2,7 @@
 
 use App\Facades\DeviceCache;
 use LibreNMS\Util\Rewrite;
+use LibreNMS\Util\Url;
 
 /*
  * LibreNMS
@@ -29,7 +30,7 @@ echo '<td>' . $icon . '</td>';
 echo '<td style="vertical-align: middle;">' . $entry['datetime'] . '</td>';
 
 if ($device) {
-    echo '<td style="vertical-align: middle;">' . generate_device_link($device, $device->shortDisplayName()) . '</td>';
+    echo '<td style="vertical-align: middle;">' . Url::deviceLink($device, $device->shortDisplayName()) . '</td>';
 }
 
 if ($entry['type'] == 'interface') {

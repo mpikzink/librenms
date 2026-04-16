@@ -2,6 +2,7 @@
 
 use App\Facades\DeviceCache;
 use LibreNMS\Util\Rewrite;
+use LibreNMS\Util\Url;
 
 /*
  * This program is free software: you can redistribute it and/or modify it
@@ -90,7 +91,7 @@ foreach (dbFetchRows($sql, $param) as $eventlog) {
 
     $response[] = [
         'datetime' => "<span class='alert-status " . eventlog_severity($severity_colour) . " eventlog-status'></span>" . $eventlog['humandate'],
-        'hostname' => generate_device_link($device, $device->shortDisplayName()),
+        'hostname' => Url::deviceLink($device, $device->shortDisplayName()),
         'type' => $type,
         'message' => htmlspecialchars((string) $eventlog['message']),
         'username' => $eventlog['username'],

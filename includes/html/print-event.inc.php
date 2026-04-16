@@ -34,7 +34,7 @@ if (! isset($vars['device'])) {
 }
 
 if ($entry['type'] == 'interface') {
-    $port = PortCache::get($entry['reference']));
+    $port = PortCache::get($entry['reference']);
     $entry['link'] = '<b>' . Url::portLink($port, Rewrite::shortenIfName(strtolower((string) $port->getLabel()))) . '</b>';
 } else {
     $entry['link'] = 'System';

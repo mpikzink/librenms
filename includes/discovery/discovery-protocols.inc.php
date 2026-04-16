@@ -233,7 +233,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
             }
 
             $port = PortCache::getByIfIndex($IndexId, $device['device_id']);
-            if (! $port->exists) {
+            if ($port === null) {
                 $local_ifName = $lldp['lldpNeighborPortId'][$IndexId][1];
                 $local_port_id = find_port_id('gigabitEthernet ' . $local_ifName, null, $device['device_id']);
                 $port = PortCache::get($local_port_id);

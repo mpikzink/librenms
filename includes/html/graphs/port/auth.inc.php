@@ -11,7 +11,7 @@ if (is_numeric($vars['id']) && ($auth || port_permitted($vars['id']))) {
     $port = PortCache::get($vars['id']);
     $device = DeviceCache::get((int) $port['device_id']);
 
-    if ($device->exists === false) {
+    if ($device === null) {
         throw new RrdGraphException('Device not found', 'No Device');
     }
 

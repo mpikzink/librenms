@@ -374,7 +374,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
             } else {
                 $local_port_id = find_port_id($lldp_ports[$entry_key]['lldpLocPortId'] ?? null, $ifIndex, $device['device_id']);
             }
-            $interface = PortCache::get($local_port_id)->toArray();
+            $interface = PortCache::get($local_port_id)?->toArray() ?? false;
 
             d_echo($lldp_instance);
 

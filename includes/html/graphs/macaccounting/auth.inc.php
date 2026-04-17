@@ -35,8 +35,8 @@ if (! is_file($filename)) {
 d_echo('exists');
 
 $rrd_filename = $filename;
-$port = PortCache::get($acc['port_id'])->toArray();
-$device = DeviceCache::get($port['device_id']);
+$port = PortCache::get($acc['port_id']);
+$device = DeviceCache::get($port->device_id);
 $title = Url::deviceLink($device);
 $title .= ' :: Port  ' . Url::portLink($port);
 $title .= ' :: ' . Mac::parse($acc['mac'])->readable();

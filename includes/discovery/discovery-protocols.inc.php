@@ -79,7 +79,7 @@ if (isset($device['os_group']) && $device['os_group'] == 'cisco') {
                 }
             }
 
-            if ($port->port_id ?? false && $cdp['cdpCacheDeviceId'] && $cdp['cdpCacheDevicePort']) {
+            if ($port?->exists && $cdp['cdpCacheDeviceId'] && $cdp['cdpCacheDevicePort']) {
                 $remote_port_id = find_port_id($cdp['cdpCacheDevicePort'], '', $remote_device_id);
                 discover_link(
                     $port->port_id,
@@ -133,7 +133,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                 $remote_device_id = discover_new_device($lldp['lldpRemSysName'], $device, 'LLDP', $port);
             }
 
-            if ($port->port_id ?? false && $lldp['lldpRemSysName'] && $lldp['lldpRemPortId']) {
+            if ($port?->exists && $lldp['lldpRemSysName'] && $lldp['lldpRemPortId']) {
                 $remote_port_id = find_port_id($lldp['lldpRemPortDesc'] ?? '', $lldp['lldpRemPortId'], $remote_device_id);
                 discover_link(
                     $port->port_id,
@@ -166,7 +166,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                 $remote_device_id = discover_new_device($lldp['lldpRemSysName'], $device, 'LLDP', $port);
             }
 
-            if ($port->port_id ?? false && $lldp['lldpRemSysName'] && $lldp['lldpRemPortId']) {
+            if ($port?->exists ?? false && $lldp['lldpRemSysName'] && $lldp['lldpRemPortId']) {
                 $remote_port_id = find_port_id($lldp['lldpRemPortDesc'], $lldp['lldpRemPortId'], $remote_device_id);
                 discover_link(
                     $port->port_id,
@@ -201,7 +201,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                         $remote_device_id = discover_new_device($lldp['tmnxLldpRemSysName'], $device, 'LLDP', $port);
                     }
 
-                    if ($port->port_id ?? false && $lldp['tmnxLldpRemSysName'] && $lldp['tmnxLldpRemPortId']) {
+                    if ($port?->exists && $lldp['tmnxLldpRemSysName'] && $lldp['tmnxLldpRemPortId']) {
                         $remote_port_id = find_port_id($lldp['tmnxLldpRemPortDesc'], $lldp['tmnxLldpRemPortId'], $remote_device_id);
                         discover_link(
                             $port->port_id,
@@ -233,7 +233,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
             }
 
             $port = PortCache::getByIfIndex($IndexId, $device['device_id']);
-            if ($port->port_id ?? false) {
+            if ($port?->exists) {
                 $local_ifName = $lldp['lldpNeighborPortId'][$IndexId][1];
                 $local_port_id = find_port_id('gigabitEthernet ' . $local_ifName, null, $device['device_id']);
                 $port = PortCache::get($local_port_id);
@@ -253,7 +253,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                 $remote_device_id = discover_new_device($remote_device_name, $device, 'LLDP', $port);
             }
 
-            if ($port->port_id ?? false && $remote_device_name && $remote_port_descr) {
+            if ($port?->exists && $remote_device_name && $remote_port_descr) {
                 discover_link(
                     $port->port_id, //our port id from database
                     'lldp',
@@ -475,7 +475,7 @@ if (($device['os'] == 'routeros') && version_compare($device['version'], '7.7', 
                 if (empty($lldp['lldpRemSysName']) && isset($lldp['lldpRemSysDesc'])) {
                     $lldp['lldpRemSysName'] = $lldp['lldpRemSysDesc'];
                 }
-                if ($port?->port_id !== 0 && isset($lldp['lldpRemSysName']) && $lldp['lldpRemSysName'] && $remote_port_name) {
+                if ($port?->exists && isset($lldp['lldpRemSysName']) && $lldp['lldpRemSysName'] && $remote_port_name) {
                     discover_link(
                         $port->port_id,
                         'lldp',

@@ -157,15 +157,6 @@ function get_port_by_id($port_id): array|false
     return false;
 }
 
-function ifclass($ifOperStatus, $ifAdminStatus)
-{
-    // fake a port model
-    return \LibreNMS\Util\Url::portLinkDisplayClass((object) [
-        'ifOperStatus' => $ifOperStatus instanceof \LibreNMS\Enum\IfOperStatus ? $ifOperStatus : \LibreNMS\Enum\IfOperStatus::tryFrom($ifOperStatus),
-        'ifAdminStatus' => $ifAdminStatus instanceof \LibreNMS\Enum\IfOperStatus ? $ifAdminStatus : \LibreNMS\Enum\IfOperStatus::tryFrom($ifAdminStatus),
-    ]);
-}
-
 function device_by_id_cache($device_id)
 {
     return DeviceCache::get((int) $device_id)->toArray();

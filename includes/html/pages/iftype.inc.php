@@ -38,7 +38,6 @@ if ($if_list) {
         unset($class);
         $port['ifAlias'] = str_ireplace($port['type'] . ': ', '', $port['ifAlias']);
         $port['ifAlias'] = str_ireplace('[PNI]', 'Private', $port['ifAlias']);
-        $ifclass = ifclass($port['ifOperStatus'], $port['ifAdminStatus']);
 
         echo "<tr class='iftype'>
             <td><span class=list-large>" . generate_port_link($port, $port['port_descr_descr']) . "</span><br />

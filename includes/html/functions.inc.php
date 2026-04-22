@@ -244,8 +244,11 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
         $port['graph_type'] = 'port_bits';
     }
 
-    $class = ifclass($port['ifOperStatus'], $port['ifAdminStatus']);
-
+    // fake a port model in midterm refractor the hole function
+    $class = Url::portLinkDisplayClass((object) [
+        'ifOperStatus' => $port['ifOperStatus'] instanceof \LibreNMS\Enum\IfOperStatus ? $port['ifOperStatus'] : \LibreNMS\Enum\IfOperStatus::tryFrom($port['ifOperStatus']),
+        'ifAdminStatus' => $port['ifAdminStatus'] instanceof \LibreNMS\Enum\IfOperStatus ? $port['ifAdminStatus'] : \LibreNMS\Enum\IfOperStatus::tryFrom($port['ifAdminStatus']),
+    ]);
     if (! isset($port['hostname'])) {
         $port = array_merge($port, device_by_id_cache($port['device_id']));
     }

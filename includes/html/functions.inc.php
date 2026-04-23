@@ -18,6 +18,7 @@ use App\Models\Device;
 use App\Models\Port;
 use Illuminate\Support\Facades\Gate;
 use LibreNMS\Enum\ImageFormat;
+use LibreNMS\Util\Clean;
 use LibreNMS\Util\Number;
 use LibreNMS\Util\Rewrite;
 use LibreNMS\Util\Url;
@@ -230,38 +231,22 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
     if (is_null($port)) {
         return (string) $text;
     }
-    $graph_array = [];
+
+    if(is_array($port)) {
+        $port = PortCache::get((int) ($port['port_id'] ?? 0));
+    }
+
 
     if (! $text) {
-        $text = Rewrite::normalizeIfName($port['label'] ?? $port['ifName']);
+        $text = $port->getLabel();
     }
 
-    if ($type) {
-        $port['graph_type'] = $type;
-    }
-
-    if (! isset($port['graph_type'])) {
-        $port['graph_type'] = 'port_bits';
-    }
-
-    // fake a port model in midterm refractor the hole function
-    $class = Url::portLinkDisplayClass((object) [
-        'ifOperStatus' => $port['ifOperStatus'] instanceof \LibreNMS\Enum\IfOperStatus ? $port['ifOperStatus'] : \LibreNMS\Enum\IfOperStatus::tryFrom($port['ifOperStatus']),
-        'ifAdminStatus' => $port['ifAdminStatus'] instanceof \LibreNMS\Enum\IfOperStatus ? $port['ifAdminStatus'] : \LibreNMS\Enum\IfOperStatus::tryFrom($port['ifAdminStatus']),
-    ]);
-    if (! isset($port['hostname'])) {
-        $port = array_merge($port, device_by_id_cache($port['device_id']));
-    }
-
-    if (! isset($port['label'])) {
-        $port = cleanPort($port);
-    }
-
-    $content = '<div class=list-large>' . ($port['hostname'] ?? '') . ' - ' . Rewrite::normalizeIfName(addslashes(\LibreNMS\Util\Clean::html($port['label'], []))) . '</div>';
-    $content .= addslashes(\LibreNMS\Util\Clean::html($port['ifAlias'], [])) . '<br />';
-
+    $content = '<div class=list-large>' . ($port->device?->hostname ?? '') . ' - ' . Rewrite::normalizeIfName(addslashes(\LibreNMS\Util\Clean::html($port->getLabel(), []))) . '</div>';
+    $content .= addslashes(Clean::html($port->ifAlias, [])) . '<br />';
     $content .= "<div style=\'width: 850px\'>";
-    $graph_array['type'] = $port['graph_type'];
+
+    $graph_array = [];
+    $graph_array['type'] = $port->type ?? 'port_bits';
     $graph_array['legend'] = 'yes';
     $graph_array['height'] = '100';
     $graph_array['width'] = '340';
@@ -280,12 +265,12 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
 
     $content .= '</div>';
 
-    $url = generate_port_url($port);
+    $url = Url::portUrl($port);
 
     if ($overlib == 0) {
         return $content;
-    } elseif (port_permitted($port['port_id'], $port['device_id'])) {
-        return Url::overlibLink($url, $text, $content, $class);
+    } elseif (port_permitted($port->port_id, $port->device_id)) {
+        return Url::overlibLink($url, $text, $content, Url::portLinkDisplayClass($port));
     } else {
         return Rewrite::normalizeIfName($text);
     }

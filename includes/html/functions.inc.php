@@ -232,10 +232,9 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
         return (string) $text;
     }
 
-    if(is_array($port)) {
+    if (is_array($port)) {
         $port = PortCache::get((int) $port['port_id']);
     }
-
 
     if (! $text) {
         $text = $port->getLabel();
@@ -246,13 +245,13 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
     $content .= "<div style=\'width: 850px\'>";
 
     $graph_array = [];
-    $graph_array['type'] = $port->type ?? 'port_bits';
+    $graph_array['type'] = $type ?? $port->type ?? 'port_bits';
     $graph_array['legend'] = 'yes';
     $graph_array['height'] = '100';
     $graph_array['width'] = '340';
     $graph_array['to'] = LibrenmsConfig::get('time.now');
     $graph_array['from'] = LibrenmsConfig::get('time.day');
-    $graph_array['id'] = $port['port_id'];
+    $graph_array['id'] = $port->port_id;
     $content .= Url::graphTag($graph_array);
     if ($single_graph == 0) {
         $graph_array['from'] = LibrenmsConfig::get('time.week');

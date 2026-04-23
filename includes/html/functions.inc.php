@@ -233,7 +233,7 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
     }
 
     if(is_array($port)) {
-        $port = PortCache::get((int) ($port['port_id'] ?? 0));
+        $port = PortCache::get((int) $port['port_id']);
     }
 
 

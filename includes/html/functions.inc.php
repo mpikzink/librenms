@@ -247,7 +247,7 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
         'width' => '340',
         'to' => LibrenmsConfig::get('time.now'),
         'from' => LibrenmsConfig::get('time.day'),
-        'id' => $port->port_id
+        'id' => $port->port_id,
     ];
     $content .= Url::graphTag($graph_array);
     if ($single_graph == 0) {
@@ -266,7 +266,7 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
     if ($overlib == 0) {
         return $content;
     } elseif (port_permitted($port->port_id, $port->device_id)) {
-        return Url::overlibLink($url, ($text ?? $port->getLabel()), $content, Url::portLinkDisplayClass($port));
+        return Url::overlibLink($url, $text ?? $port->getLabel(), $content, Url::portLinkDisplayClass($port));
     } else {
         return Rewrite::normalizeIfName($text ?? $port->getLabel());
     }

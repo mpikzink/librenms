@@ -16,6 +16,7 @@ use App\Facades\PortCache;
 use App\Models\Bill;
 use App\Models\Device;
 use App\Models\Port;
+use App\Models\Sensor;
 use Illuminate\Support\Facades\Gate;
 use LibreNMS\Enum\ImageFormat;
 use LibreNMS\Util\Number;
@@ -550,7 +551,7 @@ function format_alert_details($alert_idx, $tmp_alerts, $type_info = null)
         if ($sensor->sensor_limit_low_warn) {
             $details_a[] = 'low_warn: ' . $sensor->sensor_limit_low_warn;
         }
-        if ($senso->sensor_limit_warn) {
+        if ($sensor->sensor_limit_warn) {
             $details_a[] = 'high_warn: ' . $sensor->sensor_limit_warn;
         }
         if ($sensor->sensor_limit) {

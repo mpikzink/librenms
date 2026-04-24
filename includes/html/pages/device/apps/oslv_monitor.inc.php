@@ -3,6 +3,7 @@
 use App\Facades\LibrenmsConfig;
 use App\Models\Port;
 use App\Models\Storage;
+use LibreNMS\Util\Url;
 
 $name = 'oslv_monitor';
 
@@ -442,12 +443,7 @@ if (isset($vars['oslvm']) && isset($app_data['oslvm_data'][$vars['oslvm']])) {
                         $port = Port::with('device')->firstWhere(['device_id' => $app->device_id, 'ifName' => $interface]);
                         if (isset($port)) {
                             $interface_raw = true;
-                            $interface = generate_port_link([
-                                'label' => $port->label,
-                                'port_id' => $port->port_id,
-                                'ifName' => $port->ifName,
-                                'device_id' => $port->device_id,
-                            ]);
+                            $interface = Url::portLink($port);
                         }
                         $if_speed = $port->ifSpeed;
                         $ifInUcastPkts_rate = $port->ifInUcastPkts_rate;
@@ -463,12 +459,7 @@ if (isset($vars['oslvm']) && isset($app_data['oslvm_data'][$vars['oslvm']])) {
                         $port = Port::with('device')->firstWhere(['device_id' => $app->device_id, 'ifName' => $gw_interface]);
                         if (isset($port)) {
                             $gw_interface_raw = true;
-                            $gw_interface = generate_port_link([
-                                'label' => $port->label,
-                                'port_id' => $port->port_id,
-                                'ifName' => $port->ifName,
-                                'device_id' => $port->device_id,
-                            ]);
+                            $gw_interface = Url::portLink($port);
                         }
                     }
                 } else {

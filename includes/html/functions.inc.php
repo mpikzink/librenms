@@ -236,22 +236,19 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
         $port = PortCache::get((int) $port['port_id']);
     }
 
-    if (! $text) {
-        $text = $port->getLabel();
-    }
-
     $content = '<div class=list-large>' . ($port->device?->hostname ?? '') . ' - ' . Rewrite::normalizeIfName(addslashes(\LibreNMS\Util\Clean::html($port->getLabel(), []))) . '</div>';
     $content .= addslashes(Clean::html($port->ifAlias, [])) . '<br />';
     $content .= "<div style=\'width: 850px\'>";
 
-    $graph_array = [];
-    $graph_array['type'] = $type ?? $port->type ?? 'port_bits';
-    $graph_array['legend'] = 'yes';
-    $graph_array['height'] = '100';
-    $graph_array['width'] = '340';
-    $graph_array['to'] = LibrenmsConfig::get('time.now');
-    $graph_array['from'] = LibrenmsConfig::get('time.day');
-    $graph_array['id'] = $port->port_id;
+    $graph_array = [
+        'type' => $type ?? 'port_bits',
+        'legend' => 'yes',
+        'height' => '100',
+        'width' => '340',
+        'to' => LibrenmsConfig::get('time.now'),
+        'from' => LibrenmsConfig::get('time.day'),
+        'id' => $port->port_id
+    ];
     $content .= Url::graphTag($graph_array);
     if ($single_graph == 0) {
         $graph_array['from'] = LibrenmsConfig::get('time.week');
@@ -269,9 +266,9 @@ function generate_port_link($port, $text = null, $type = null, $overlib = 1, $si
     if ($overlib == 0) {
         return $content;
     } elseif (port_permitted($port->port_id, $port->device_id)) {
-        return Url::overlibLink($url, $text, $content, Url::portLinkDisplayClass($port));
+        return Url::overlibLink($url, ($text ?? $port->getLabel()), $content, Url::portLinkDisplayClass($port));
     } else {
-        return Rewrite::normalizeIfName($text);
+        return Rewrite::normalizeIfName($text ?? $port->getLabel());
     }
 }//end generate_port_link()
 

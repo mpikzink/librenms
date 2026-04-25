@@ -1,6 +1,5 @@
 <?php
 
-use App\Facades\PortCache;
 use App\Models\Port;
 use LibreNMS\Util\Number;
 use LibreNMS\Util\Url;

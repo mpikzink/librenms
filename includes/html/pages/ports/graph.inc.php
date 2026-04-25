@@ -1,7 +1,6 @@
 <?php
 
 use App\Facades\PortCache;
-use App\Models\Port;
 use LibreNMS\Util\Url;
 
 echo '<div class="panel panel-default panel-condensed">';
@@ -17,7 +16,7 @@ $param = [];
 $where = '';
 $ignore_filter = 0;
 $disabled_filter = 0;
-$device = DeviceCache::get((int) ($vars['device_id'] ?? 0));
+$device = DeviceCache::get((int) $vars['device_id']);
 
 $device_selected = json_encode($device->exists ? ['id' => $device->device_id, 'text' => $device->displayName()] : '');
 echo '<script>init_select2("#device_id", "device", {field: "device_id"}, ' . $device_selected . ' , "All Devices")</script>';

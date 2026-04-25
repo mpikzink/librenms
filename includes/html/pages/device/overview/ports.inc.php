@@ -16,7 +16,7 @@ if (ObjectCache::portCounts(['total'], $device->device_id)['total'] > 0) {
               <i class="fa fa-road fa-lg icon-theme" aria-hidden="true"></i><strong> Overall Traffic</strong>
             </div>';
 
-    $graph_array = \App\Http\Controllers\Device\Tabs\OverviewController::setGraphWidth();
+    $graph_array = App\Http\Controllers\Device\Tabs\OverviewController::setGraphWidth();
     $graph_array['to'] = LibrenmsConfig::get('time.now');
     $graph_array['device'] = $device->device_id;
     $graph_array['type'] = 'device_bits';

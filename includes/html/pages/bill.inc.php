@@ -1,6 +1,7 @@
 <?php
 
 use App\Facades\DeviceCache;
+use App\Facades\LibrenmsConfig;
 use App\Facades\PortCache;
 use App\Models\Bill;
 use Illuminate\Support\Facades\Gate;
@@ -60,8 +61,8 @@ if (Gate::allows('view', $bill)) {
         $bill_color = '#0000cc';
     }
 
-    $fromtext = dbFetchCell("SELECT DATE_FORMAT($datefrom, '" . App\Facades\LibrenmsConfig::get('dateformat.mysql.date') . "')");
-    $totext = dbFetchCell("SELECT DATE_FORMAT($dateto, '" . App\Facades\LibrenmsConfig::get('dateformat.mysql.date') . "')");
+    $fromtext = dbFetchCell("SELECT DATE_FORMAT($datefrom, '" . LibrenmsConfig::get('dateformat.mysql.date') . "')");
+    $totext = dbFetchCell("SELECT DATE_FORMAT($dateto, '" . LibrenmsConfig::get('dateformat.mysql.date') . "')");
     $unixfrom = dbFetchCell("SELECT UNIX_TIMESTAMP('$datefrom')");
     $unixto = dbFetchCell("SELECT UNIX_TIMESTAMP('$dateto')");
 
@@ -242,7 +243,7 @@ if (Gate::allows('view', $bill)) {
             $li .= "$type'>";
 
             $di = "<img src='billing-graph.php?bill_id=" . $bill_id . '&amp;bill_code=' . htmlspecialchars($bill_code);
-            $di .= '&amp;from=' . App\Facades\LibrenmsConfig::get('time.day') . '&amp;to=' . App\Facades\LibrenmsConfig::get('time.now');
+            $di .= '&amp;from=' . LibrenmsConfig::get('time.day') . '&amp;to=' . LibrenmsConfig::get('time.now');
             $di .= '&amp;x=1190&amp;y=250';
             $di .= "$type'>";
 
@@ -260,7 +261,7 @@ if (Gate::allows('view', $bill)) {
             $li .= '&amp;width=1000&amp;height=200&amp;total=1&amp;dir=' . $dir_95th . "'>";
 
             $di = "<img src='graph.php?type=bill_bits&amp;id=" . $bill_id;
-            $di .= '&amp;from=' . App\Facades\LibrenmsConfig::get('time.day') . '&amp;to=' . App\Facades\LibrenmsConfig::get('time.now');
+            $di .= '&amp;from=' . LibrenmsConfig::get('time.day') . '&amp;to=' . LibrenmsConfig::get('time.now');
             $di .= '&amp;width=1000&amp;height=200&amp;total=1&amp;dir=' . $dir_95th . "'>";
 
             $mi = "<img src='graph.php?type=bill_bits&amp;id=" . $bill_id;

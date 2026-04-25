@@ -1,6 +1,7 @@
 <?php
 
 use App\Facades\DeviceCache;
+use App\Facades\LibrenmsConfig;
 use App\Facades\PortCache;
 use LibreNMS\Util\Url;
 
@@ -113,8 +114,8 @@ foreach (dbFetchRows('SELECT * FROM pseudowires AS P, ports AS I WHERE P.port_id
         if ($pw_a) {
             $pw_a['width'] = '150';
             $pw_a['height'] = '30';
-            $pw_a['from'] = App\Facades\LibrenmsConfig::get('time.day');
-            $pw_a['to'] = App\Facades\LibrenmsConfig::get('time.now');
+            $pw_a['from'] = LibrenmsConfig::get('time.day');
+            $pw_a['to'] = LibrenmsConfig::get('time.now');
             $pw_a['bg'] = $bg;
             $types = [
                 'bits',
@@ -132,8 +133,8 @@ foreach (dbFetchRows('SELECT * FROM pseudowires AS P, ports AS I WHERE P.port_id
         if ($pw_b) {
             $pw_b['width'] = '150';
             $pw_b['height'] = '30';
-            $pw_b['from'] = App\Facades\LibrenmsConfig::get('time.day');
-            $pw_b['to'] = App\Facades\LibrenmsConfig::get('time.now');
+            $pw_b['from'] = LibrenmsConfig::get('time.day');
+            $pw_b['to'] = LibrenmsConfig::get('time.now');
             $pw_b['bg'] = $bg;
             $types = ['bits', 'upkts', 'errors'];
             foreach ($types as $graph_type) {

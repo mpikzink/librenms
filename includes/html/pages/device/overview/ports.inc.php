@@ -2,6 +2,7 @@
 
 use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
+use App\Http\Controllers\Device\Tabs\OverviewController;
 use App\Models\Port;
 use LibreNMS\Util\ObjectCache;
 use LibreNMS\Util\Rewrite;
@@ -16,7 +17,7 @@ if (ObjectCache::portCounts(['total'], $device->device_id)['total'] > 0) {
               <i class="fa fa-road fa-lg icon-theme" aria-hidden="true"></i><strong> Overall Traffic</strong>
             </div>';
 
-    $graph_array = App\Http\Controllers\Device\Tabs\OverviewController::setGraphWidth();
+    $graph_array = OverviewController::setGraphWidth();
     $graph_array['to'] = LibrenmsConfig::get('time.now');
     $graph_array['device'] = $device->device_id;
     $graph_array['type'] = 'device_bits';
@@ -53,7 +54,7 @@ if (ObjectCache::portCounts(['total'], $device->device_id)['total'] > 0) {
         ->where('disabled', 0)
         ->orderBy('ifName')
         ->get()
-        ->map(fn ($p) => Url::portLink($p, Rewrite::shortenIfName(strtolower($p->getLabel()))))
+        ->map(fn ($p) => Url::portLink($p, Rewrite::shortenIfName(strtolower($p->getLabel())))})
         ->implode(', ');
     echo '</div>';
     echo '</div>';

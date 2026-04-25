@@ -2,7 +2,9 @@
 <?php
 
 use App\Facades\DeviceCache;
+use App\Facades\LibrenmsConfig;
 use App\Facades\PortCache;
+use App\Facades\Rrd;
 use LibreNMS\Util\Url;
 
 $types_array = explode(',', strip_tags((string) $vars['type']));
@@ -11,7 +13,7 @@ $ports = get_ports_from_type($types_array);
 $if_list = implode(',', array_map(fn ($port) => $port['port_id'], $ports));
 
 // show title from config file (but ucwords it)
-$ctypes = collect(App\Facades\LibrenmsConfig::get('custom_descr', []))->keyBy(function ($descr) {
+$ctypes = collect(LibrenmsConfig::get('custom_descr', []))->keyBy(function ($descr) {
     if (is_array($descr)) {
         return strtolower((string) $descr[0]);
     }

@@ -29,6 +29,7 @@ namespace LibreNMS\Util;
 use App\Facades\LibrenmsConfig;
 use App\Models\Device;
 use App\Models\Port;
+use App\Models\Sensor;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Gate;
@@ -212,7 +213,7 @@ class Url
     }
 
     /**
-     * @param  \App\Models\Sensor  $sensor
+     * @param  Sensor  $sensor
      * @param  string  $text
      * @param  string  $type
      * @param  bool  $overlib
@@ -274,12 +275,12 @@ class Url
         return route('device', $routeParams) . self::urlParams($vars);
     }
 
-    public static function portUrl($port, $vars = [])
+    public static function portUrl(Port $port, $vars = []): string
     {
         return self::generate(['page' => 'device', 'device' => $port->device_id, 'tab' => 'port', 'port' => $port->port_id], $vars);
     }
 
-    public static function sensorUrl($sensor, $vars = [])
+    public static function sensorUrl(Sensor $sensor, $vars = []): string
     {
         return self::generate(['page' => 'device', 'device' => $sensor->device_id, 'tab' => 'health', 'metric' => $sensor->sensor_class], $vars);
     }
@@ -329,7 +330,7 @@ class Url
         return '<img src="graph-image ' . url('graph.php') . '?type=' . $args['graph_type'] . '&amp;id=' . $args['port_id'] . '&amp;from=' . $args['from'] . '&amp;to=' . $args['to'] . '&amp;width=' . $args['width'] . '&amp;height=' . $args['height'] . '&amp;bg=' . $args['bg'] . '">';
     }
 
-    public static function generate($vars, $new_vars = [])
+    public static function generate($vars, $new_vars = []): string
     {
         $vars = array_merge($vars, $new_vars);
 
@@ -536,7 +537,7 @@ class Url
     /**
      * Get html class for a sensor
      *
-     * @param  \App\Models\Sensor  $sensor
+     * @param  Sensor  $sensor
      * @return string
      */
     public static function sensorLinkDisplayClass($sensor)

@@ -31,7 +31,7 @@ use App\Models\Device;
 
 class Rewrite
 {
-    public static function normalizeIfType($type)
+    public static function normalizeIfType(string $type): string
     {
         $rewrite_iftype = [
             'frameRelay' => 'Frame Relay',
@@ -55,7 +55,7 @@ class Rewrite
         return $rewrite_iftype[$type] ?? $type;
     }
 
-    public static function shortenIfType($type)
+    public static function shortenIfType(string $type): string
     {
         return str_ireplace(
             [
@@ -78,7 +78,7 @@ class Rewrite
         );
     }
 
-    public static function normalizeIfName($name)
+    public static function normalizeIfName(string $name): string
     {
         $rewrite_ifname = [
             'ether' => 'Ether',
@@ -105,7 +105,7 @@ class Rewrite
         return str_ireplace(array_keys($rewrite_ifname), array_values($rewrite_ifname), $name);
     }
 
-    public static function shortenIfName($name): string
+    public static function shortenIfName(string $name): string
     {
         $rewrite_shortif = [
             'hundredgige' => 'Hu',

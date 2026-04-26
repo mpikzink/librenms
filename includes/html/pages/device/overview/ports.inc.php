@@ -54,7 +54,7 @@ if (ObjectCache::portCounts(['total'], $device->device_id)['total'] > 0) {
         ->where('disabled', 0)
         ->orderBy('ifName')
         ->get()
-        ->map(fn ($p) => Url::portLink($p, Rewrite::shortenIfName(strtolower($p->getLabel()))))
+        ->map(fn ($p) => Url::portLink($p, Rewrite::shortenIfName(strtolower((string) $p->getLabel()))))
         ->implode(', ');
     echo '</div>';
     echo '</div>';

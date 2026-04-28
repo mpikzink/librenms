@@ -535,7 +535,7 @@ function format_alert_details($alert_idx, $tmp_alerts, $type_info = null)
     }
 
     if (isset($tmp_alerts['sensor_id'])) {
-        $sensor = Sensor::find($tmp_alerts['sensor_id']);
+        $sensor = new Sensor($tmp_alerts);
         if ($sensor->sensor_class == 'state') {
             // Give more details for a state (textual form)
             $details = 'State: ' . ($sensor->state_descr ?? '') . ' (numerical ' . $sensor->sensor_current . ')<br>  ';
@@ -543,21 +543,15 @@ function format_alert_details($alert_idx, $tmp_alerts, $type_info = null)
             // Other sensors
             $details = 'Value: ' . $sensor->sensor_current . ' (' . $sensor->sensor_class . ')<br>  ';
         }
-        $details_a = [];
 
-        if ($sensor->sensor_limit_low) {
-            $details_a[] = 'low: ' . $sensor->sensor_limit_low;
-        }
-        if ($sensor->sensor_limit_low_warn) {
-            $details_a[] = 'low_warn: ' . $sensor->sensor_limit_low_warn;
-        }
-        if ($sensor->sensor_limit_warn) {
-            $details_a[] = 'high_warn: ' . $sensor->sensor_limit_warn;
-        }
-        if ($sensor->sensor_limit) {
-            $details_a[] = 'high: ' . $sensor->sensor_limit;
-        }
-        $details .= implode(', ', $details_a);
+        $details .= collect([
+            'low' => $sensor->sensor_limit_low,
+            'low_warn' => $sensor->sensor_limit_low_warn,
+            'high_warn' => $sensor->sensor_limit_warn,
+            'high' => $sensor->sensor_limit,
+        ])->filter()
+          ->map(fn ($value, $key) => "$key: $value")
+          ->implode(', ');
 
         $fault_detail .= Url::sensorLink($sensor, $sensor->name) . ';&nbsp; <br>' . $details;
         $fallback = false;

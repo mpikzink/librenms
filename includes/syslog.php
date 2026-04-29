@@ -18,8 +18,7 @@ function process_syslog($entry, $update)
         $entry['host'] = $syslog_xlate[$entry['host']];
     }
     $device = DeviceCache::get($entry['host'])->device_id;
-    if ($device->device_id > 0) {
-
+    if ($device->exists) {
         if (LibrenmsConfig::get('enable_syslog_hooks') && is_array(LibrenmsConfig::getOsSetting($device->os, 'syslog_hook'))) {
             foreach (LibrenmsConfig::getOsSetting($device->os, 'syslog_hook') as $v) {
                 $syslogprogmsg = $entry['program'] . ': ' . $entry['msg'];

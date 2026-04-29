@@ -182,33 +182,21 @@ class Port extends DeviceRelatedModel
 
     // ---- Query scopes ----
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsDeleted($query)
+    public function scopeIsDeleted(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), 1],
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsNotDeleted($query)
+    public function scopeIsNotDeleted(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), 0],
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsUp($query)
+    public function scopeIsUp(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -218,11 +206,7 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsDown($query)
+    public function scopeIsDown(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -233,11 +217,7 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsShutdown($query)
+    public function scopeIsShutdown(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -247,11 +227,7 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsIgnored($query)
+    public function scopeIsIgnored(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -259,11 +235,7 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsDisabled($query)
+    public function scopeIsDisabled(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -271,11 +243,7 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeHasErrors($query)
+    public function scopeHasErrors(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -288,11 +256,7 @@ class Port extends DeviceRelatedModel
         });
     }
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIsValid($query)
+    public function scopeIsValid(Builder $query): Builder
     {
         return $query->where([
             [$this->qualifyColumn('deleted'), '=', 0],
@@ -300,12 +264,12 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
-    public function scopeHasAccess($query, User $user)
+    public function scopeHasAccess(Builder $query, User $user): Builder
     {
         return $this->hasPortAccess($query, $user);
     }
 
-    public function scopeInPortGroup($query, $portGroup)
+    public function scopeInPortGroup(Builder $query, PortGroup $portGroup): Builder
     {
         return $query->whereIn($query->qualifyColumn('port_id'), function ($query) use ($portGroup): void {
             $query->select('port_id')
@@ -316,7 +280,7 @@ class Port extends DeviceRelatedModel
 
     // ---- Define Relationships ----
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\PortAdsl, $this>
+     * @return HasOne<PortAdsl, $this>
      */
     public function adsl(): HasOne
     {
@@ -332,7 +296,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\PortVdsl, $this>
+     * @return HasOne<PortVdsl, $this>
      */
     public function vdsl(): HasOne
     {
@@ -340,7 +304,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<\App\Models\Eventlog, $this>
+     * @return MorphMany<Eventlog, $this>
      */
     public function events(): MorphMany
     {
@@ -348,7 +312,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PortsFdb, $this>
+     * @return HasMany<PortsFdb, $this>
      */
     public function fdbEntries(): HasMany
     {
@@ -356,7 +320,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\PortGroup, $this>
+     * @return BelongsToMany<PortGroup, $this>
      */
     public function groups(): BelongsToMany
     {
@@ -364,7 +328,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ipv4Address, $this>
+     * @return HasMany<Ipv4Address, $this>
      */
     public function ipv4(): HasMany
     {
@@ -372,7 +336,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<\App\Models\Ipv4Network, \App\Models\Ipv4Address, $this>
+     * @return HasManyThrough<Ipv4Network, Ipv4Address, $this>
      */
     public function ipv4Networks(): HasManyThrough
     {
@@ -380,7 +344,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ipv6Address, $this>
+     * @return HasMany<Ipv6Address, $this>
      */
     public function ipv6(): HasMany
     {
@@ -388,7 +352,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<\App\Models\Ipv6Network, \App\Models\Ipv6Address, $this>
+     * @return HasManyThrough<Ipv6Network, Ipv6Address, $this>
      */
     public function ipv6Networks(): HasManyThrough
     {
@@ -396,7 +360,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Link, $this>
+     * @return HasMany<Link, $this>
      */
     public function links(): HasMany
     {
@@ -404,7 +368,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Link, $this>
+     * @return HasMany<Link, $this>
      */
     public function remoteLinks(): HasMany
     {
@@ -412,7 +376,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\Link>
+     * @return \Illuminate\Support\Collection<int, Link>
      */
     public function allLinks(): \Illuminate\Support\Collection
     {
@@ -420,7 +384,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Port, $this>
+     * @return BelongsToMany<Port, $this>
      */
     public function xdpLinkedPorts(): BelongsToMany
     {
@@ -428,7 +392,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<\App\Models\Port, \App\Models\Ipv4Mac, $this>
+     * @return HasManyThrough<Port, Ipv4Mac, $this>
      */
     public function macLinkedPorts(): HasManyThrough
     {
@@ -441,7 +405,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\MacAccounting, $this>
+     * @return HasMany<MacAccounting, $this>
      */
     public function macAccounting(): HasMany
     {
@@ -449,7 +413,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ipv4Mac, $this>
+     * @return HasMany<Ipv4Mac, $this>
      */
     public function macs(): HasMany
     {
@@ -457,7 +421,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PortsNac, $this>
+     * @return HasMany<PortsNac, $this>
      */
     public function nac(): HasMany
     {
@@ -465,7 +429,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ipv6Nd, $this>
+     * @return HasMany<Ipv6Nd, $this>
      */
     public function nd(): HasMany
     {
@@ -473,7 +437,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\OspfNbr, $this>
+     * @return HasMany<OspfNbr, $this>
      */
     public function ospfNeighbors(): HasMany
     {
@@ -481,7 +445,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\OspfPort, $this>
+     * @return HasMany<OspfPort, $this>
      */
     public function ospfPorts(): HasMany
     {
@@ -489,7 +453,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ospfv3Nbr, $this>
+     * @return HasMany<Ospfv3Nbr, $this>
      */
     public function ospfv3Neighbors(): HasMany
     {
@@ -497,7 +461,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ospfv3Port, $this>
+     * @return HasMany<Ospfv3Port, $this>
      */
     public function ospfv3Ports(): HasMany
     {
@@ -505,7 +469,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Port, $this>
+     * @return BelongsTo<Port, $this>
      */
     public function pagpParent(): BelongsTo
     {
@@ -513,7 +477,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Pseudowire, $this>
+     * @return HasMany<Pseudowire, $this>
      */
     public function pseudowires(): HasMany
     {
@@ -521,7 +485,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Qos, $this>
+     * @return HasMany<Qos, $this>
      */
     public function qos(): HasMany
     {
@@ -529,7 +493,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Route, $this>
+     * @return HasMany<Route, $this>
      */
     public function routes(): HasMany
     {
@@ -537,7 +501,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<\App\Models\Port, \App\Models\PortStack, $this>
+     * @return HasManyThrough<Port, PortStack, $this>
      */
     public function stackChildren(): HasManyThrough
     {
@@ -545,7 +509,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<\App\Models\Port, \App\Models\PortStack, $this>
+     * @return HasManyThrough<Port, PortStack, $this>
      */
     public function stackParent(): HasManyThrough
     {
@@ -553,7 +517,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PortStatistic, $this>
+     * @return HasMany<PortStatistic, $this>
      */
     public function statistics(): HasMany
     {
@@ -561,7 +525,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PortStp, $this>
+     * @return HasMany<PortStp, $this>
      */
     public function stp(): HasMany
     {
@@ -569,7 +533,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Transceiver, $this>
+     * @return HasMany<Transceiver, $this>
      */
     public function transceivers(): HasMany
     {
@@ -577,7 +541,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User, $this>
+     * @return BelongsToMany<User, $this>
      */
     public function users(): BelongsToMany
     {
@@ -586,7 +550,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PortVlan, $this>
+     * @return HasMany<PortVlan, $this>
      */
     public function vlans(): HasMany
     {
@@ -594,7 +558,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Vrf, $this>
+     * @return HasOne<Vrf, $this>
      */
     public function vrf(): HasOne
     {
@@ -602,7 +566,7 @@ class Port extends DeviceRelatedModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\PortSecurity, $this>
+     * @return HasOne<PortSecurity, $this>
      */
     public function portSecurity(): HasOne
     {

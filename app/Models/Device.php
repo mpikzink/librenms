@@ -532,7 +532,7 @@ class Device extends BaseModel
 
     // ---- Query scopes ----
 
-    public function scopeIsUp($query)
+    public function scopeIsUp(Builder $query): Builder
     {
         return $query->where([
             ['status', '=', 1],
@@ -542,7 +542,7 @@ class Device extends BaseModel
         ]);
     }
 
-    public function scopeIsActive($query)
+    public function scopeIsActive(Builder $query): Builder
     {
         return $query->where([
             ['ignore', '=', 0],
@@ -550,7 +550,7 @@ class Device extends BaseModel
         ]);
     }
 
-    public function scopeIsDown($query)
+    public function scopeIsDown(Builder $query): Builder
     {
         return $query->where([
             ['status', '=', 0],
@@ -559,7 +559,7 @@ class Device extends BaseModel
         ]);
     }
 
-    public function scopeIsIgnored($query)
+    public function scopeIsIgnored(Builder $query): Builder
     {
         return $query->where([
             ['ignore', '=', 1],
@@ -567,28 +567,28 @@ class Device extends BaseModel
         ]);
     }
 
-    public function scopeNotIgnored($query)
+    public function scopeNotIgnored(Builder $query): Builder
     {
         return $query->where([
             ['ignore', '=', 0],
         ]);
     }
 
-    public function scopeIsDisabled($query)
+    public function scopeIsDisabled(Builder $query): Builder
     {
         return $query->where([
             ['disabled', '=', 1],
         ]);
     }
 
-    public function scopeIsDisableNotify($query)
+    public function scopeIsDisableNotify(Builder $query): Builder
     {
         return $query->where([
             ['disable_notify', '=', 1],
         ]);
     }
 
-    public function scopeIsNotDisabled($query)
+    public function scopeIsNotDisabled(Builder $query): Builder
     {
         return $query->where([
             ['disable_notify', '=', 0],
@@ -607,7 +607,7 @@ class Device extends BaseModel
         });
     }
 
-    public function scopeWhereUptime($query, $uptime, $modifier = '<')
+    public function scopeWhereUptime(Builder $query, $uptime, $modifier = '<'): Builder
     {
         return $query->where([
             ['uptime', '>', 0],
@@ -620,12 +620,12 @@ class Device extends BaseModel
         return $this->scopeWhereAttributeDisabled($query->where('disabled', 0), 'override_icmp_disable');
     }
 
-    public function scopeHasAccess($query, User $user)
+    public function scopeHasAccess($query, User $user): Builder
     {
         return $this->hasDeviceAccess($query, $user);
     }
 
-    public function scopeInDeviceGroup($query, $deviceGroup)
+    public function scopeInDeviceGroup(Builder $query, $deviceGroup): Builder
     {
         return $query->whereIn(
             $query->qualifyColumn('device_id'), function ($query) use ($deviceGroup): void {
@@ -636,7 +636,7 @@ class Device extends BaseModel
         );
     }
 
-    public function scopeNotInDeviceGroup($query, $deviceGroup)
+    public function scopeNotInDeviceGroup(Builder $query, $deviceGroup): Builder
     {
         return $query->whereNotIn(
             $query->qualifyColumn('device_id'), function ($query) use ($deviceGroup): void {
@@ -647,7 +647,7 @@ class Device extends BaseModel
         );
     }
 
-    public function scopeInServiceTemplate($query, $serviceTemplate)
+    public function scopeInServiceTemplate(Builder $query, $serviceTemplate): Builder
     {
         return $query->whereIn(
             $query->qualifyColumn('device_id'), function ($query) use ($serviceTemplate): void {
@@ -658,7 +658,7 @@ class Device extends BaseModel
         );
     }
 
-    public function scopeNotInServiceTemplate($query, $serviceTemplate)
+    public function scopeNotInServiceTemplate(Builder $query, $serviceTemplate): Builder
     {
         return $query->whereNotIn(
             $query->qualifyColumn('device_id'), function ($query) use ($serviceTemplate): void {
@@ -892,7 +892,7 @@ class Device extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \App\Models\Link>
+     * @return \Illuminate\Support\Collection<int, Link>
      */
     public function allLinks(): \Illuminate\Support\Collection
     {
@@ -909,7 +909,7 @@ class Device extends BaseModel
 
     /**
      * @return HasMany<Ipv4Mac, $this>
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\MacAccounting, $this>
+     * @return HasMany<MacAccounting, $this>
      */
     public function macAccounting(): HasMany
     {
@@ -917,7 +917,7 @@ class Device extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Ipv4Mac, $this>
+     * @return HasMany<Ipv4Mac, $this>
      */
     public function macs(): HasMany
     {

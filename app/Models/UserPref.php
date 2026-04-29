@@ -26,6 +26,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserPref extends BaseModel
@@ -81,14 +82,14 @@ class UserPref extends BaseModel
 
     // ---- Query Scopes ----
 
-    public function scopePref($query, $pref)
+    public function scopePref(Builder $query, string $pref): Builder
     {
         return $query->where('pref', $pref);
     }
 
     // ---- Define Relationships ----
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

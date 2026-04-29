@@ -85,37 +85,20 @@ class AlertRule extends BaseModel
 
     // ---- Query scopes ----
 
-    /**
-     * @param  Builder<AlertRule>  $query
-     * @return Builder
-     */
-    public function scopeEnabled($query)
+    public function scopeEnabled(Builder $query): Builder
     {
         return $query->where('alert_rules.disabled', 0);
     }
 
-    /**
-     * Scope for only alert rules that are currently in alarm
-     *
-     * @param  Builder<AlertRule>  $query
-     * @return Builder
-     */
-    public function scopeIsActive($query)
+    public function scopeIsActive(Builder $query): Builder
     {
-        return $query->enabled()
-            ->join('alerts', 'alerts.rule_id', 'alert_rules.id')
+        $this->scopeEnabled($query);
+
+        return $query->join('alerts', 'alerts.rule_id', 'alert_rules.id')
             ->whereNotIn('alerts.state', [AlertState::CLEAR, AlertState::ACKNOWLEDGED, AlertState::RECOVERED]);
     }
 
-    /**
-     * Scope to filter rules for devices permitted to user
-     * (do not use for admin and global read-only users)
-     *
-     * @param  Builder<AlertRule>  $query
-     * @param  User  $user
-     * @return mixed
-     */
-    public function scopeHasAccess($query, User $user)
+    public function scopeHasAccess(Builder $query, User $user): Builder
     {
         if (Gate::allows('viewAll', AlertRule::class)) {
             return $query;
@@ -131,7 +114,7 @@ class AlertRule extends BaseModel
     // ---- Define Relationships ----
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Alert, $this>
+     * @return HasMany<Alert, $this>
      */
     public function alerts(): HasMany
     {
@@ -139,7 +122,7 @@ class AlertRule extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\AlertLog, $this>
+     * @return HasMany<AlertLog, $this>
      */
     public function logs(): HasMany
     {
@@ -147,7 +130,7 @@ class AlertRule extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\AlertTemplateMap, $this>
+     * @return HasMany<AlertTemplateMap, $this>
      */
     public function templateMaps(): HasMany
     {
@@ -155,7 +138,7 @@ class AlertRule extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Device, $this>
+     * @return BelongsToMany<Device, $this>
      */
     public function devices(): BelongsToMany
     {
@@ -163,7 +146,7 @@ class AlertRule extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\DeviceGroup, $this>
+     * @return BelongsToMany<DeviceGroup, $this>
      */
     public function groups(): BelongsToMany
     {
@@ -171,7 +154,7 @@ class AlertRule extends BaseModel
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Location, $this>
+     * @return BelongsToMany<Location, $this>
      */
     public function locations(): BelongsToMany
     {

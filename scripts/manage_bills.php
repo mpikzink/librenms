@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use App\Models\Bill;
+
 $init_modules = [];
 require realpath(__DIR__ . '/..') . '/includes/init.php';
 
@@ -39,14 +41,13 @@ function create_bill($bill_name, $bill_type, $bill_cdr, $bill_day)
      * - bill_day:  day of month billing starts.
      **/
     echo 'Creating bill with name : ' . $bill_name . ' (Type: ' . $bill_type . ', Quota: ' . $bill_cdr . ")\n";
-    $insert = [
+    $bill_id = Bill::create([
         'bill_name' => $bill_name,
         'bill_type' => $bill_type,
         'bill_cdr' => $bill_cdr,
         'bill_day' => $bill_day,
-    ];
-    $create_bill = dbInsert($insert, 'bills');
-    echo 'Created bill ID ' . $create_bill . "\n";
+    ]);
+    echo 'Created bill ID ' . $bill_id . "\n";
 
     return $create_bill;
 }
@@ -60,9 +61,6 @@ function get_devices($host_glob, $nameType)
 // This will flush bill ports if -r is set on cli
 function flush_bill($id)
 {
-    echo "Removing ports from bill ID $id\n";
-
-    return dbDelete('bill_ports', '`bill_id` = ?', [$id]);
 }
 
 function add_ports_to_bill($devs, $intf_glob, $id)
@@ -168,7 +166,14 @@ if ($create_bill) {
         print_help();
     }
 
-    create_bill($bill_name, $bill_type, $bill_cdr, '1');
+    echo 'Creating bill with name : ' . $bill_name . ' (Type: ' . $bill_type . ', Quota: ' . $bill_cdr . ")\n";
+    $bill_id = Bill::create([
+        'bill_name' => $bill_name,
+        'bill_type' => $bill_type,
+        'bill_cdr' => $bill_cdr,
+        'bill_day' => 1,
+    ]);
+    echo 'Created bill ID ' . $bill_id . "\n";
     exit(0);
 }
 
@@ -212,7 +217,8 @@ if (empty($devices)) {
 }
 
 if ($flush) {
-    $flush_ret = flush_bill($id);
+    echo "Removing ports from bill ID $id\n";
+    $flush_ret = Bill::find($id)->delete();
 }
 
 $ret = add_ports_to_bill($devices, $intf_glob, $id);

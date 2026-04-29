@@ -82,6 +82,9 @@ class UserPref extends BaseModel
 
     // ---- Query Scopes ----
 
+    /**
+     * Scope a query to only include preferences with the given name.
+     */
     public function scopePref(Builder $query, string $pref): Builder
     {
         return $query->where('pref', $pref);

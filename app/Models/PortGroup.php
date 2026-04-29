@@ -35,6 +35,9 @@ class PortGroup extends BaseModel
     public $timestamps = false;
     protected $fillable = ['name', 'desc'];
 
+    /**
+     * Scope a query to only include port groups the user has access to.
+     */
     public function scopeHasAccess(Builder $query, User $user): Builder
     {
         if (Gate::allows('viewAll', PortGroup::class)) {

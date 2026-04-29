@@ -94,6 +94,9 @@ class DeviceGroup extends BaseModel
 
     // ---- Query Scopes ----
 
+    /**
+     * Scope a query to only include device groups that the given user has access to.
+     */
     public function scopeHasAccess(Builder $query, User $user): Builder
     {
         if (Gate::allows('viewAll', DeviceGroup::class)) {
@@ -103,6 +106,9 @@ class DeviceGroup extends BaseModel
         return $query->whereIntegerInRaw('id', Permissions::deviceGroupsForUser($user));
     }
 
+    /**
+     * Scope a query to only include device groups that are associated with the given service template.
+     */
     public function scopeInServiceTemplate(Builder $query, $serviceTemplate): Builder
     {
         return $query->whereIn(
@@ -114,6 +120,9 @@ class DeviceGroup extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include device groups that are not associated with the given service template.
+     */
     public function scopeNotInServiceTemplate(Builder $query, $serviceTemplate): Builder
     {
         return $query->whereNotIn(

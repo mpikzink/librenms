@@ -94,11 +94,17 @@ class SslCertificate extends Model
         return $this->belongsTo(Device::class, 'device_id', 'device_id');
     }
 
+    /**
+     * Scope to only include enabled certificates.
+     */
     public function scopeEnabled(Builder $query): Builder
     {
         return $query->where('disabled', false);
     }
 
+    /**
+     * Scope to only include disabled certificates.
+     */
     public function scopeDisabled(Builder $query): Builder
     {
         return $query->where('disabled', true);

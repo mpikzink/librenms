@@ -120,6 +120,9 @@ class User extends Authenticatable
         });
     }
 
+    /**
+     * Scope a query to only include users with the admin role.
+     */
     public function scopeAdminOnly(Builder $query): Builder
     {
         return $query->whereHas('roles', fn ($q) => $q->where('name', 'admin'));

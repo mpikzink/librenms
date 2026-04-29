@@ -165,6 +165,9 @@ class Sensor extends DeviceRelatedModel implements Keyable
         return "$this->sensor_class-$this->poller_type";
     }
 
+    /**
+     * Scope a query to only include sensors in the given state.
+     */
     public function scopeStateEq(Builder $query, SensorState $state): Builder
     {
         return $query->whereHas('translations', function ($q) use ($state): void {
@@ -173,6 +176,9 @@ class Sensor extends DeviceRelatedModel implements Keyable
         });
     }
 
+    /**
+     * Scope a query to only include sensors in an unknown state (state value does not match any translation or generic state).
+     */
     public function scopeStateUnknown(Builder $query): Builder
     {
         return $query->whereHas('translations', function ($q): void {
@@ -184,18 +190,27 @@ class Sensor extends DeviceRelatedModel implements Keyable
         });
     }
 
+    /**
+     * Scope a query to only include sensors in a critical state (current value outside of critical limits).
+     */
     public function scopeIsCritical(Builder $query): Builder
     {
         return $query->whereColumn('sensor_current', '<', 'sensor_limit_low')
             ->orWhereColumn('sensor_current', '>', 'sensor_limit');
     }
 
+    /**
+     * Scope a query to only include sensors in a warning state (current value outside of warning limits but within critical limits).
+     */
     public function scopeIsWarning(Builder $query): Builder
     {
         return $query->whereColumn('sensor_current', '<', 'sensor_limit_low_warn')
             ->orWhereColumn('sensor_current', '>', 'sensor_limit_warn');
     }
 
+    /**
+     * Scope a query to only include sensors that are disabled (sensor_alert = 0).
+     */
     public function scopeIsDisabled(Builder $query): Builder
     {
         return $query->where('sensor_alert', 0);

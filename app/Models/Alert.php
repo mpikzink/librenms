@@ -48,11 +48,17 @@ class Alert extends Model
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include active alerts.
+     */
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('state', AlertState::ACTIVE);
     }
 
+    /**
+     * Scope a query to only include acknowledged alerts.
+     */
     public function scopeAcknowledged(Builder $query): Builder
     {
         return $query->where('state', AlertState::ACKNOWLEDGED);

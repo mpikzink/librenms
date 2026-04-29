@@ -85,11 +85,17 @@ class AlertRule extends BaseModel
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include enabled alert rules.
+     */
     public function scopeEnabled(Builder $query): Builder
     {
         return $query->where('alert_rules.disabled', 0);
     }
 
+    /**
+     * Scope a query to only include active alert rules (enabled and with active alerts).
+     */
     public function scopeIsActive(Builder $query): Builder
     {
         $this->scopeEnabled($query);
@@ -98,6 +104,9 @@ class AlertRule extends BaseModel
             ->whereNotIn('alerts.state', [AlertState::CLEAR, AlertState::ACKNOWLEDGED, AlertState::RECOVERED]);
     }
 
+    /**
+     * Scope a query to only include alert rules the user has access to.
+     */
     public function scopeHasAccess(Builder $query, User $user): Builder
     {
         if (Gate::allows('viewAll', AlertRule::class)) {

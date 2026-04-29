@@ -43,6 +43,9 @@ class CustomMapNode extends BaseModel
                 ->whereRelation('device', fn ($q) => $q->isDown())->exists();
     }
 
+    /**
+     * Scope a query to only include nodes that the given user has access to.
+     */
     public function scopeHasAccess(Builder $query, User $user): Builder
     {
         return $this->hasDeviceAccess($query, $user);

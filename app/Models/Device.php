@@ -532,6 +532,9 @@ class Device extends BaseModel
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include devices that are up and not ignored or disabled.
+     */
     public function scopeIsUp(Builder $query): Builder
     {
         return $query->where([
@@ -542,6 +545,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+     * Scope a query to only include devices that are not ignored or disabled, regardless of status.
+     */
     public function scopeIsActive(Builder $query): Builder
     {
         return $query->where([
@@ -550,6 +556,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+     * Scope a query to only include devices that are down and not ignored or disabled.
+     */
     public function scopeIsDown(Builder $query): Builder
     {
         return $query->where([
@@ -559,6 +568,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+     * Scope a query to only include devices that are ignored (regardless of status) but not disabled.
+     */
     public function scopeIsIgnored(Builder $query): Builder
     {
         return $query->where([
@@ -567,6 +579,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+     * Scope a query to only include devices that are not ignored (regardless of status) and not disabled.
+     */
     public function scopeNotIgnored(Builder $query): Builder
     {
         return $query->where([
@@ -574,6 +589,10 @@ class Device extends BaseModel
         ]);
     }
 
+
+    /**
+     * Scope a query to only include devices that are disabled (regardless of status or ignore).
+     */
     public function scopeIsDisabled(Builder $query): Builder
     {
         return $query->where([
@@ -581,6 +600,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+     * Scope a query to only include devices that are disabled for notifications (regardless of status or ignore).
+     */
     public function scopeIsDisableNotify(Builder $query): Builder
     {
         return $query->where([
@@ -588,6 +610,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+    * Scope a query to only include devices that are not disabled for notifications and not disabled (regardless of status or ignore).
+    */
     public function scopeIsNotDisabled(Builder $query): Builder
     {
         return $query->where([
@@ -596,6 +621,9 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+    * Scope a query to only include devices that have a specific attribute disabled (attribute value is null or not 'true').
+    */
     public function scopeWhereAttributeDisabled(Builder $query, string $attribute): Builder
     {
         return $query->leftJoin('devices_attribs', function (JoinClause $query) use ($attribute): void {
@@ -607,6 +635,9 @@ class Device extends BaseModel
         });
     }
 
+    /**
+     * Scope a query to only include devices with uptime greater than 0 and matching the given uptime condition.
+     */
     public function scopeWhereUptime(Builder $query, $uptime, $modifier = '<'): Builder
     {
         return $query->where([
@@ -615,16 +646,25 @@ class Device extends BaseModel
         ]);
     }
 
+    /**
+     * Scope a query to only include devices that can be pinged.
+     */
     public function scopeCanPing(Builder $query): Builder
     {
         return $this->scopeWhereAttributeDisabled($query->where('disabled', 0), 'override_icmp_disable');
     }
 
+    /**
+     * Scope a query to only include devices that the given user has access to.
+     */
     public function scopeHasAccess($query, User $user): Builder
     {
         return $this->hasDeviceAccess($query, $user);
     }
 
+    /**
+     * Scope a query to only include devices that are in the given device group(s).
+     */
     public function scopeInDeviceGroup(Builder $query, $deviceGroup): Builder
     {
         return $query->whereIn(
@@ -636,6 +676,9 @@ class Device extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include devices that are not in the given device group(s).
+     */
     public function scopeNotInDeviceGroup(Builder $query, $deviceGroup): Builder
     {
         return $query->whereNotIn(
@@ -647,6 +690,9 @@ class Device extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include devices that are in the given service template(s).
+     */
     public function scopeInServiceTemplate(Builder $query, $serviceTemplate): Builder
     {
         return $query->whereIn(
@@ -658,6 +704,9 @@ class Device extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include devices that are not in the given service template(s).
+     */
     public function scopeNotInServiceTemplate(Builder $query, $serviceTemplate): Builder
     {
         return $query->whereNotIn(
@@ -669,6 +718,16 @@ class Device extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include devices matching the given device specification.
+     * Device specification can be:
+     * - empty or 'all' for all devices
+     * - 'new' for devices that have never been discovered (last_discovered is null)
+     * - 'even' for devices with an even device_id
+     * - 'odd' for devices with an odd device_id
+     * - a specific device_id
+     * - a hostname with optional wildcards (*)
+     */
     public function scopeWhereDeviceSpec(Builder $query, ?string $deviceSpec): Builder
     {
         if (empty($deviceSpec)) {

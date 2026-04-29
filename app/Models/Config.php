@@ -62,6 +62,9 @@ class Config extends BaseModel
 
     // ---- Query Scopes ----
 
+    /**
+     * Scope a query to include the config with the given name and all of its children.
+     */
     public function scopeWithChildren(Builder $query, string $name): Builder
     {
         return $query->where('config_name', $name)

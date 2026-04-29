@@ -174,6 +174,9 @@ class AlertSchedule extends Model
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include active alert schedules.
+     */
     public function scopeIsActive(Builder $query): Builder
     {
         return $query->where(function ($query): void {

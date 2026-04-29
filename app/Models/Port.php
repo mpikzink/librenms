@@ -182,6 +182,9 @@ class Port extends DeviceRelatedModel
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include deleted ports.
+     */
     public function scopeIsDeleted(Builder $query): Builder
     {
         return $query->where([
@@ -189,6 +192,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include non-deleted ports.
+     */
     public function scopeIsNotDeleted(Builder $query): Builder
     {
         return $query->where([
@@ -196,6 +202,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that are up.
+     */
     public function scopeIsUp(Builder $query): Builder
     {
         return $query->where([
@@ -206,6 +215,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that are down.
+     */
     public function scopeIsDown(Builder $query): Builder
     {
         return $query->where([
@@ -217,6 +229,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that are shutdown.
+     */
     public function scopeIsShutdown(Builder $query): Builder
     {
         return $query->where([
@@ -227,6 +242,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that are ignored.
+     */
     public function scopeIsIgnored(Builder $query): Builder
     {
         return $query->where([
@@ -235,6 +253,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that are disabled.
+     */
     public function scopeIsDisabled(Builder $query): Builder
     {
         return $query->where([
@@ -243,6 +264,9 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that have errors.
+     */
     public function scopeHasErrors(Builder $query): Builder
     {
         return $query->where([
@@ -256,6 +280,9 @@ class Port extends DeviceRelatedModel
         });
     }
 
+    /**
+     * Scope a query to only include ports that are valid (not deleted or disabled).
+     */
     public function scopeIsValid(Builder $query): Builder
     {
         return $query->where([
@@ -264,11 +291,17 @@ class Port extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include ports that the given user has access to.
+     */
     public function scopeHasAccess(Builder $query, User $user): Builder
     {
         return $this->hasPortAccess($query, $user);
     }
 
+    /**
+     * Scope a query to only include ports that are in the given port group.
+     */
     public function scopeInPortGroup(Builder $query, PortGroup $portGroup): Builder
     {
         return $query->whereIn($query->qualifyColumn('port_id'), function ($query) use ($portGroup): void {

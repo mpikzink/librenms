@@ -27,6 +27,9 @@ class Service extends DeviceRelatedModel
 
     // ---- Query Scopes ----
 
+    /**
+     * Scope a query to only include active services (not ignored or disabled).
+     */
     public function scopeIsActive(Builder $query): Builder
     {
         return $query->where([
@@ -35,6 +38,9 @@ class Service extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include services that are in an OK state.
+     */
     public function scopeIsOk(Builder $query): Builder
     {
         return $query->where([
@@ -44,6 +50,9 @@ class Service extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include services that are in a critical state.
+     */
     public function scopeIsCritical(Builder $query): Builder
     {
         return $query->where([
@@ -53,6 +62,9 @@ class Service extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include services that are in a warning state.
+     */
     public function scopeIsWarning(Builder $query): Builder
     {
         return $query->where([
@@ -62,6 +74,9 @@ class Service extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include services that are ignored.
+     */
     public function scopeIsIgnored(Builder $query): Builder
     {
         return $query->where([
@@ -70,6 +85,9 @@ class Service extends DeviceRelatedModel
         ]);
     }
 
+    /**
+     * Scope a query to only include services that are disabled.
+     */
     public function scopeIsDisabled(Builder $query): Builder
     {
         return $query->where('service_disabled', 1);

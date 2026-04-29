@@ -47,16 +47,25 @@ class Plugin extends BaseModel
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include active plugins.
+     */
     public function scopeIsActive(Builder $query): Builder
     {
         return $query->where('plugin_active', 1);
     }
 
+    /**
+     * Scope a query to only include version 1 plugins.
+     */
     public function scopeVersionOne(Builder $query): Builder
     {
         return $query->where('version', 1);
     }
 
+    /**
+     * Scope a query to only include version 2 plugins.
+     */
     public function scopeVersionTwo(Builder $query): Builder
     {
         return $query->where('version', 2);

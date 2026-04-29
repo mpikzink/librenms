@@ -155,6 +155,9 @@ class Location extends Model
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include locations that the given user has access to.
+     */
     public function scopeHasAccess(Builder $query, User $user): Builder
     {
         if (Gate::allows('viewAll', Location::class)) {
@@ -169,6 +172,9 @@ class Location extends Model
         return $query->whereIntegerInRaw('id', $ids);
     }
 
+    /**
+     * Scope a query to only include locations that have devices in the given device group.
+     */
     public function scopeInDeviceGroup(Builder $query, $deviceGroup): Builder
     {
         return $query->whereHas('devices.groups', function ($query) use ($deviceGroup): void {

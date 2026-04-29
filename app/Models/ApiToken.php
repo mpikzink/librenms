@@ -112,6 +112,9 @@ class ApiToken extends BaseModel
 
     // ---- Query scopes ----
 
+    /**
+     * Scope a query to only include enabled tokens.
+     */
     public function scopeIsEnabled(Builder $query): Builder
     {
         return $query->where('disabled', 0);

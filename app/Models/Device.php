@@ -589,7 +589,6 @@ class Device extends BaseModel
         ]);
     }
 
-
     /**
      * Scope a query to only include devices that are disabled (regardless of status or ignore).
      */
@@ -611,8 +610,8 @@ class Device extends BaseModel
     }
 
     /**
-    * Scope a query to only include devices that are not disabled for notifications and not disabled (regardless of status or ignore).
-    */
+     * Scope a query to only include devices that are not disabled for notifications and not disabled (regardless of status or ignore).
+     */
     public function scopeIsNotDisabled(Builder $query): Builder
     {
         return $query->where([
@@ -622,8 +621,8 @@ class Device extends BaseModel
     }
 
     /**
-    * Scope a query to only include devices that have a specific attribute disabled (attribute value is null or not 'true').
-    */
+     * Scope a query to only include devices that have a specific attribute disabled (attribute value is null or not 'true').
+     */
     public function scopeWhereAttributeDisabled(Builder $query, string $attribute): Builder
     {
         return $query->leftJoin('devices_attribs', function (JoinClause $query) use ($attribute): void {

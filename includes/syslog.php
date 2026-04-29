@@ -23,7 +23,7 @@ function process_syslog($entry, $update)
             foreach (LibrenmsConfig::getOsSetting($device->os, 'syslog_hook') as $v) {
                 $syslogprogmsg = $entry['program'] . ': ' . $entry['msg'];
                 if ((isset($v['script'])) && (isset($v['regex'])) && preg_match($v['regex'], $syslogprogmsg)) {
-                    shell_exec(escapeshellcmd($v['script']) . ' ' . escapeshellarg($device->hostname) . ' ' . escapeshellarg($device->os) . ' ' . escapeshellarg($syslogprogmsg) . ' >/dev/null 2>&1 &');
+                    shell_exec(escapeshellcmd($v['script']) . ' ' . escapeshellarg((string) $device->hostname) . ' ' . escapeshellarg((string) $device->os) . ' ' . escapeshellarg($syslogprogmsg) . ' >/dev/null 2>&1 &');
                 }
             }
         }

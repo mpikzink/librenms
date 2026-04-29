@@ -125,7 +125,7 @@ class User extends Authenticatable
      */
     public function scopeAdminOnly(Builder $query): Builder
     {
-        return $query->whereHas('roles', fn ($q) => $q->where('name', 'admin'));
+        return self::query()->role('admin');
     }
 
     // ---- Accessors/Mutators ----

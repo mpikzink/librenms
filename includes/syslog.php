@@ -1,51 +1,11 @@
 <?php
 
+use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
-
-function get_cache($host, $value)
-{
-    global $dev_cache;
-
-    if (! isset($dev_cache[$host][$value])) {
-        switch ($value) {
-            case 'device_id':
-                // Try by hostname
-                $ip = inet_pton($host);
-                if (inet_ntop($ip) === false) {
-                    $dev_cache[$host]['device_id'] = dbFetchCell('SELECT `device_id` FROM devices WHERE `hostname` = ? OR `sysName` = ?', [$host, $host]);
-                } else {
-                    $dev_cache[$host]['device_id'] = dbFetchCell('SELECT `device_id` FROM devices WHERE `hostname` = ? OR `sysName` = ? OR `ip` = ?', [$host, $host, $ip]);
-                }
-                // If failed, try by IP
-                if (! is_numeric($dev_cache[$host]['device_id'])) {
-                    $dev_cache[$host]['device_id'] = dbFetchCell('SELECT `device_id` FROM `ipv4_addresses` AS A, `ports` AS I WHERE A.ipv4_address = ? AND I.port_id = A.port_id', [$host]);
-                }
-                break;
-
-            case 'os':
-                $dev_cache[$host]['os'] = dbFetchCell('SELECT `os` FROM devices WHERE `device_id` = ?', [get_cache($host, 'device_id')]);
-                break;
-
-            case 'version':
-                $dev_cache[$host]['version'] = dbFetchCell('SELECT `version` FROM devices WHERE `device_id`= ?', [get_cache($host, 'device_id')]);
-                break;
-
-            case 'hostname':
-                $dev_cache[$host]['hostname'] = dbFetchCell('SELECT `hostname` FROM devices WHERE `device_id` = ?', [get_cache($host, 'device_id')]);
-                break;
-
-            default:
-                return null;
-        }//end switch
-    }//end if
-
-    return $dev_cache[$host][$value];
-}//end get_cache()
+use App\Models\Syslog;
 
 function process_syslog($entry, $update)
 {
-    global $dev_cache;
-
     foreach (LibrenmsConfig::get('syslog_filter') as $bi) {
         if (str_contains((string) $entry['msg'], $bi)) {
             return $entry;
@@ -57,21 +17,19 @@ function process_syslog($entry, $update)
     if (! empty($syslog_xlate[$entry['host']])) {
         $entry['host'] = $syslog_xlate[$entry['host']];
     }
-    $entry['device_id'] = get_cache($entry['host'], 'device_id');
-    if ($entry['device_id']) {
-        $os = get_cache($entry['host'], 'os');
-        $hostname = get_cache($entry['host'], 'hostname');
+    $device = DeviceCache::get($entry['host'])->device_id;
+    if ($device->device_id > 0) {
 
-        if (LibrenmsConfig::get('enable_syslog_hooks') && is_array(LibrenmsConfig::getOsSetting($os, 'syslog_hook'))) {
-            foreach (LibrenmsConfig::getOsSetting($os, 'syslog_hook') as $v) {
+        if (LibrenmsConfig::get('enable_syslog_hooks') && is_array(LibrenmsConfig::getOsSetting($device->os, 'syslog_hook'))) {
+            foreach (LibrenmsConfig::getOsSetting($device->os, 'syslog_hook') as $v) {
                 $syslogprogmsg = $entry['program'] . ': ' . $entry['msg'];
                 if ((isset($v['script'])) && (isset($v['regex'])) && preg_match($v['regex'], $syslogprogmsg)) {
-                    shell_exec(escapeshellcmd($v['script']) . ' ' . escapeshellarg((string) $hostname) . ' ' . escapeshellarg((string) $os) . ' ' . escapeshellarg($syslogprogmsg) . ' >/dev/null 2>&1 &');
+                    shell_exec(escapeshellcmd($v['script']) . ' ' . escapeshellarg($device->hostname) . ' ' . escapeshellarg($device->os) . ' ' . escapeshellarg($syslogprogmsg) . ' >/dev/null 2>&1 &');
                 }
             }
         }
 
-        if (in_array($os, ['ios', 'iosxe', 'catos'])) {
+        if (in_array($device->os, ['ios', 'iosxe', 'catos'])) {
             // multipart message
             if (str_contains((string) $entry['msg'], ':')) {
                 $matches = [];
@@ -90,7 +48,7 @@ function process_syslog($entry, $update)
                     unset($entry['msg']);
                 }
             }
-        } elseif ($os == 'linux' and get_cache($entry['host'], 'version') == 'Point') {
+        } elseif ($device->os == 'linux' and $device->version == 'Point') {
             // Cisco WAP200 and similar
             $matches = [];
             if (preg_match('#Log: \[(?P<program>.*)\] - (?P<msg>.*)#', (string) $entry['msg'], $matches)) {
@@ -99,7 +57,7 @@ function process_syslog($entry, $update)
             }
 
             unset($matches);
-        } elseif ($os == 'linux') {
+        } elseif ($device->os == 'linux') {
             $matches = [];
             // pam_krb5(sshd:auth): authentication failure; logname=root uid=0 euid=0 tty=ssh ruser= rhost=123.213.132.231
             // pam_krb5[sshd:auth]: authentication failure; logname=root uid=0 euid=0 tty=ssh ruser= rhost=123.213.132.231
@@ -120,14 +78,14 @@ function process_syslog($entry, $update)
             }
 
             unset($matches);
-        } elseif ($os == 'procurve') {
+        } elseif ($device->os == 'procurve') {
             $matches = [];
             if (preg_match('/^(?P<program>[A-Za-z]+): {2}(?P<msg>.*)/', (string) $entry['msg'], $matches)) {
                 $entry['msg'] = $matches['msg'] . ' [' . $entry['program'] . ']';
                 $entry['program'] = $matches['program'];
             }
             unset($matches);
-        } elseif ($os == 'zywall') {
+        } elseif ($device->os == 'zywall') {
             // Zwwall sends messages without all the fields, so the offset is wrong
             $msg = preg_replace('/" /', '";', stripslashes($entry['program'] . ':' . $entry['msg']));
             $msg = str_getcsv((string) $msg, ';', escape: '\\');
@@ -150,23 +108,9 @@ function process_syslog($entry, $update)
         $entry = array_map(trim(...), $entry);
 
         if ($update) {
-            dbInsert(
-                [
-                    'device_id' => $entry['device_id'],
-                    'program' => $entry['program'],
-                    'facility' => $entry['facility'],
-                    'priority' => $entry['priority'],
-                    'level' => $entry['level'],
-                    'tag' => $entry['tag'],
-                    'msg' => $entry['msg'],
-                    'timestamp' => $entry['timestamp'],
-                ],
-                'syslog'
-            );
+            Syslog::create($entry);
         }
-
-        unset($os);
-    }//end if
+    }
 
     return $entry;
-}//end process_syslog()
+}

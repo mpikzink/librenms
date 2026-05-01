@@ -122,6 +122,8 @@ class SensorsController extends TableController
             'alert' => $alert,
             'sensor_current' => $sensor_current,
             'sensor_limit_low' => Html::severityToLabel(Severity::Unknown, $sensor->formatValue('sensor_limit_low')),
+            'sensor_limit_low_warn' => Html::severityToLabel(Severity::Unknown, $sensor->formatValue('sensor_limit_low_warn')),
+            'sensor_limit_warn' => Html::severityToLabel(Severity::Unknown, $sensor->formatValue('sensor_limit_warn')),
             'sensor_limit' => Html::severityToLabel(Severity::Unknown, $sensor->formatValue('sensor_limit')),
         ];
     }

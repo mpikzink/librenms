@@ -7,11 +7,11 @@
         <div class="panel-heading">
             <div class="row" style="padding:0px 10px 0px 10px;">
                 <div class="pull-left">
-                    <x-option-bar border="none" name="Health" :options="$metrics" :selected="$metric"></x-option-bar>
+                    <x-option-bar border="none" name="{{ __('Health') }}" :options="$metrics" :selected="$metric"></x-option-bar>
                 </div>
 
                 <div class="pull-left">
-                    <x-option-bar border="none" name="Status" :options="$status_bar" :selected="$status"></x-option-bar>
+                    <x-option-bar border="none" name="{{ __('Status') }}" :options="$status_bar" :selected="$status"></x-option-bar>
                 </div>
 
                 <div class="pull-right">
@@ -30,6 +30,8 @@
                     <th data-column-id="alert" data-sortable="false" data-searchable="false"></th>
                     <th data-column-id="sensor_current">{{ __('Current') }}</th>
                     <th data-column-id="sensor_limit_low" data-searchable="false">{{ __('Low Limit') }}</th>
+                    <th data-column-id="sensor_limit_low_warn" data-searchable="false">{{ __('Low Warning') }}</th>
+                    <th data-column-id="sensor_limit_warn" data-searchable="false">{{ __('High Warning') }}</th>
                     <th data-column-id="sensor_limit" data-searchable="false">{{ __('High Limit') }}</th>
                 </tr>
                 </thead>

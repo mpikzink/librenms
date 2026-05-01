@@ -22,7 +22,7 @@ foreach ($sensors as $sensor) {
         $sensor_descr = $sensor['sensor_descr'];
     }
 
-    $sensor_current = Html::severityToLabel($sensor->currentStatus(), $sensor->formatValue());
+    $sensor_current = Html::severityToLabel($sensor->currentStatus(),__('Current') . ': ' .  $sensor->formatValue());
 
     echo "<div class='panel panel-default'>
         <div class='panel-heading'>
@@ -30,16 +30,16 @@ foreach ($sensors as $sensor) {
 
     //Display low and high limit if they are not null (format_si() is changing null to '0')
     if (! is_null($sensor->sensor_limit_low)) {
-        echo ' ' . Html::severityToLabel(Severity::Unknown, 'low: ' . $sensor->formatValue('sensor_limit_low'));
+        echo ' ' . Html::severityToLabel(Severity::Unknown, __('Low Limit') . ': ' . $sensor->formatValue('sensor_limit_low'));
     }
     if (! is_null($sensor->sensor_limit_low_warn)) {
-        echo ' ' . Html::severityToLabel(Severity::Unknown, 'low_warn: ' . $sensor->formatValue('sensor_limit_low_warn'));
+        echo ' ' . Html::severityToLabel(Severity::Unknown, __('Low Warning') . ': ' . $sensor->formatValue('sensor_limit_low_warn'));
     }
     if (! is_null($sensor->sensor_limit_warn)) {
-        echo ' ' . Html::severityToLabel(Severity::Unknown, 'high_warn: ' . $sensor->formatValue('sensor_limit_warn'));
+        echo ' ' . Html::severityToLabel(Severity::Unknown, __('High Warning') . ': ' . $sensor->formatValue('sensor_limit_warn'));
     }
     if (! is_null($sensor->sensor_limit)) {
-        echo ' ' . Html::severityToLabel(Severity::Unknown, 'high: ' . $sensor->formatValue('sensor_limit'));
+        echo ' ' . Html::severityToLabel(Severity::Unknown, __('High Limit') . ': ' . $sensor->formatValue('sensor_limit'));
     }
 
     echo '</div></h3>

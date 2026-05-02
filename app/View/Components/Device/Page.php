@@ -32,7 +32,9 @@ use App\Models\Device;
 use App\Models\Vminfo;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\View\Component;
+use LibreNMS\Enum\Sensor;
 use LibreNMS\Util\Graph;
 
 class Page extends Component
@@ -70,7 +72,7 @@ class Page extends Component
         $graphs = [];
         foreach (Graph::getOverviewGraphsForDevice($this->device) as $graph) {
             $graph_array['type'] = $graph['graph'];
-            $graph_array['popup_title'] = __($graph['text']);
+            $graph_array['popup_title'] = Lang::has('sensors.' . strtolower($graph['text'] . '.long')) ? __('sensors.' . strtolower($graph['text'] . '.long')) : __($graph['text']);
             $graphs[] = $graph_array;
         }
 

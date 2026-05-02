@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\LibrenmsConfig;
 use LibreNMS\Enum\Severity;
 use LibreNMS\Util\Html;
 
@@ -7,13 +8,13 @@ $row = 0;
 $unit ??= $class->unit();
 $graph_type ??= 'sensor_' . $class->value;
 
-$sensors = \App\Models\Sensor::where('sensor_class', $class)->where('device_id', $device['device_id'])->orderBy('sensor_descr')->get();
+$sensors = App\Models\Sensor::where('sensor_class', $class)->where('device_id', $device['device_id'])->orderBy('sensor_descr')->get();
 
 foreach ($sensors as $sensor) {
     if (! is_int($row++ / 2)) {
-        $row_colour = \App\Facades\LibrenmsConfig::get('list_colour.even');
+        $row_colour = LibrenmsConfig::get('list_colour.even');
     } else {
-        $row_colour = \App\Facades\LibrenmsConfig::get('list_colour.odd');
+        $row_colour = LibrenmsConfig::get('list_colour.odd');
     }
 
     if ($sensor['poller_type'] == 'ipmi') {
@@ -22,7 +23,7 @@ foreach ($sensors as $sensor) {
         $sensor_descr = $sensor['sensor_descr'];
     }
 
-    $sensor_current = Html::severityToLabel($sensor->currentStatus(),__('Current') . ': ' .  $sensor->formatValue());
+    $sensor_current = Html::severityToLabel($sensor->currentStatus(), __('Current') . ': ' . $sensor->formatValue());
 
     echo "<div class='panel panel-default'>
         <div class='panel-heading'>

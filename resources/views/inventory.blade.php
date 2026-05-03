@@ -68,8 +68,8 @@
 
         ?>
 
-        init_select2("#model", "inventory", @json($model_filter), @json($filter['model']), "{{ __('inventory.all_parts')") }};
-        init_select2("#device", "device", {}, @json($device_selected) , "{{ __('device.all_devices')") }};
+        init_select2("#model", "inventory", @json($model_filter), @json($filter['model']), "{{ __('inventory.all_parts') }}");
+        init_select2("#device", "device", {}, @json($device_selected) , "{{ __('device.all_devices') }}");
 </script>
 @endpush
 

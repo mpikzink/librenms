@@ -11,11 +11,11 @@
                     <th>{{ __('Type') }}</th>
                     <th>{{ __('Description') }}</th>
                     <th>{{ __('Current') }}</th>
-                    <th class="col-sm-1">{{ __('Low Limit') }}</th>
-                    <th class="col-sm-1">{{ __('Low Warning') }}</th>
-                    <th class="col-sm-1">{{ __('High Warning') }}</th>
-                    <th class="col-sm-1">{{ __('High Limit') }}</th>
-                    <th class="col-sm-2">{{ __('Alerting') }}</th>
+                    <th class="col-sm-1">{{ __('High') }}</th>
+                    <th class="col-sm-1">{{ __('High warn') }}</th>
+                    <th class="col-sm-1">{{ __('Low warn') }}</th>
+                    <th class="col-sm-1">{{ __('Low') }}</th>
+                    <th class="col-sm-2">{{ __('Alerts') }}</th>
                     <th></th>
                 </tr>
                 @foreach ($sensors as $sensor)
@@ -29,25 +29,13 @@
                         <td>
                             <div class="form-group has-feedback">
                                 <input type="text"
-                                       class="form-control input-sm sensor"
-                                       id="low-{{ $sensor->device_id }}"
-                                       data-device_id="{{ $sensor->device_id }}"
-                                       data-value_type="sensor_limit_low"
-                                       data-sensor_id="{{ $sensor->sensor_id }}"
-                                       data-update-url="{{ route('device.edit.health.sensor.update', [$device, $sensor]) }}"
-                                       value="{{ $sensor->sensor_limit_low }}">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group has-feedback">
-                                <input type="text"
                                        class="form-control col-sm-1 input-sm sensor"
-                                       id="low-{{ $sensor->device_id }}-warn"
+                                       id="high-{{ $sensor->device_id }}"
                                        data-device_id="{{ $sensor->device_id }}"
-                                       data-value_type="sensor_limit_low_warn"
+                                       data-value_type="sensor_limit"
                                        data-sensor_id="{{ $sensor->sensor_id }}"
                                        data-update-url="{{ route('device.edit.health.sensor.update', [$device, $sensor]) }}"
-                                       value="{{ $sensor->sensor_limit_low_warn }}">
+                                       value="{{ $sensor->sensor_limit }}">
                             </div>
                         </td>
                         <td>
@@ -66,12 +54,24 @@
                             <div class="form-group has-feedback">
                                 <input type="text"
                                        class="form-control col-sm-1 input-sm sensor"
-                                       id="high-{{ $sensor->device_id }}"
+                                       id="low-{{ $sensor->device_id }}-warn"
                                        data-device_id="{{ $sensor->device_id }}"
-                                       data-value_type="sensor_limit"
+                                       data-value_type="sensor_limit_low_warn"
                                        data-sensor_id="{{ $sensor->sensor_id }}"
                                        data-update-url="{{ route('device.edit.health.sensor.update', [$device, $sensor]) }}"
-                                       value="{{ $sensor->sensor_limit }}">
+                                       value="{{ $sensor->sensor_limit_low_warn }}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group has-feedback">
+                                <input type="text"
+                                       class="form-control input-sm sensor"
+                                       id="low-{{ $sensor->device_id }}"
+                                       data-device_id="{{ $sensor->device_id }}"
+                                       data-value_type="sensor_limit_low"
+                                       data-sensor_id="{{ $sensor->sensor_id }}"
+                                       data-update-url="{{ route('device.edit.health.sensor.update', [$device, $sensor]) }}"
+                                       value="{{ $sensor->sensor_limit_low }}">
                             </div>
                         </td>
                         <td>

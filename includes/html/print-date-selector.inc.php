@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use LibreNMS\Util\Time;
 
 ?>
 <div style="text-align: center;">
     <form class="form-inline" id="customrange">
-        <input type="hidden" id="selfaction" value="<?= Request::url(); ?>">
+        <input type="hidden" id="selfaction" value="<?php Request::url(); ?>">
         <div class="form-group">
         <label for="dtpickerfrom"><?= __('From') ?></label>
             <input type="text"

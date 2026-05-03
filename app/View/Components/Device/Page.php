@@ -34,7 +34,6 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\View\Component;
-use LibreNMS\Enum\Sensor;
 use LibreNMS\Util\Graph;
 
 class Page extends Component

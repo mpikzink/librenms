@@ -122,10 +122,11 @@ class User extends Authenticatable
 
     /**
      * Scope a query to only include users with the admin role.
+     * @param Builder<User> $query
      */
     public function scopeAdminOnly(Builder $query): Builder
     {
-        return self::query()->role('admin');
+        return $query->role('admin');
     }
 
     // ---- Accessors/Mutators ----

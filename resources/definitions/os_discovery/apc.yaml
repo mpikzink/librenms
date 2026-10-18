@@ -674,6 +674,67 @@ modules:
                             oid: PowerNet-MIB::upsOutletGroupControlOutletType
                             op: '!='
                             value: 1
+                -
+                    oid: PowerNet-MIB::upsAdvBatteryReplaceIndicator
+                    value: PowerNet-MIB::upsAdvBatteryReplaceIndicator
+                    num_oid: '.1.3.6.1.4.1.318.1.1.1.2.2.4.{{ $index }}'
+                    descr: UPS Battery Replacement Status
+                    state_name: upsAdvBatteryReplaceIndicator
+                    states:
+                        - { descr: noBatteryNeedsReplacing, value: 1, generic: 0 }
+                        - { descr: batteryNeedsReplacing, value: 2, generic: 2 }
+                -
+                    oid: PowerNet-MIB::memSensorsStatusTable
+                    value: PowerNet-MIB::memSensorsCommStatus
+                    num_oid: '.1.3.6.1.4.1.318.1.1.10.4.2.3.1.7.{{ $index }}'
+                    descr: '{{ PowerNet-MIB::memSensorsStatusSensorName }} - {{ PowerNet-MIB::memSensorsStatusSensorLocation }}'
+                    index: 'memSensorsCommStatus.{{ $index }}'
+                    state_name: memSensorsCommStatus
+                    states:
+                        - { descr: notInstalled, value: 1, generic: 1 }
+                        - { descr: commsOK, value: 2, generic: 0 }
+                        - { descr: commsLost, value: 3, generic: 2 }
+                    skip_values:
+                        -
+                            oid: PowerNet-MIB::memSensorsCommStatus
+                            op: '='
+                            value: 0
+                -
+                    oid: PowerNet-MIB::memSensorsStatusTable
+                    value: PowerNet-MIB::memSensorsAlarmStatus
+                    num_oid: '.1.3.6.1.4.1.318.1.1.10.4.2.3.1.8.{{ $index }}'
+                    descr: '{{ PowerNet-MIB::memSensorsStatusSensorName }} - {{ PowerNet-MIB::memSensorsStatusSensorLocation }}'
+                    index: 'memSensorsAlarmStatus.{{ $index }}'
+                    state_name: memSensorsAlarmStatus
+                    states:
+                        - { descr: memNormal, value: 1, generic: 0 }
+                        - { descr: memWarning, value: 2, generic: 1 }
+                        - { descr: memCritical, value: 3, generic: 2 }
+                    skip_values:
+                        -
+                            oid: PowerNet-MIB::memSensorsAlarmStatus
+                            op: '='
+                            value: 0
+                -
+                    oid: PowerNet-MIB::emsOutputRelayControlTable
+                    value: PowerNet-MIB::emsOutputRelayControlOutputRelayCommand
+                    num_oid: '.1.3.6.1.4.1.318.1.1.10.3.2.1.1.3.{{ $index }}'
+                    descr: '{{ PowerNet-MIB::emsOutputRelayControlOutputRelayName }}'
+                    index: '.1.3.6.1.4.1.318.1.1.10.3.2.1.1.3.{{ $index }}'
+                    state_name: emsOutputRelayControlOutputRelayCommand
+                    states:
+                        - { descr: immediateCloseEMS, value: 1, generic: 2 }
+                        - { descr: immediateOpenEMS, value: 2, generic: 0 }
+                -
+                    oid: PowerNet-MIB::emsOutletControlTable
+                    value: PowerNet-MIB::emsOutletControlOutletCommand
+                    num_oid: '.1.3.6.1.4.1.318.1.1.10.3.3.1.1.3.{{ $index }}'
+                    descr: '{{ PowerNet-MIB::emsOutletControlOutletName }}'
+                    index: '.1.3.6.1.4.1.318.1.1.10.3.3.1.1.3.{{ $index }}'
+                    state_name: emsOutletControlOutletCommand
+                    states:
+                        - { descr: immediateOnEMS, value: 1, generic: 2 }
+                        - { descr: immediateOffEMS, value: 2, generic: 0 }
 
         temperature:
             data:

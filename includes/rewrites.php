@@ -160,24 +160,6 @@ function ipmiSensorName($hardwareId, $sensorIpmi)
     return $sensorIpmi;
 }
 
-/**
- * @param  $state
- * @return int|void
- */
-function apc_relay_state($state)
-{
-    switch ($state) {
-        case 'immediateCloseEMS':
-        case 'immediateOnEMS':
-            return 1;
-            break;
-        case 'immediateOpenEMS':
-        case 'immediateOffEMS':
-            return 2;
-            break;
-    }
-}
-
 function parse_entity_state($state, $value)
 {
     $data = [

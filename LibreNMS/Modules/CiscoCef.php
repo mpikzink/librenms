@@ -46,7 +46,12 @@ class CiscoCef implements Module
     {
         $device = $os->getDevice();
 
-        $cefs = SnmpQuery::hideMib()->walk('CISCO-CEF-MIB::cefSwitchingPath')->table(3);
+        $response = SnmpQuery::mibs(['CISCO-CEF-MIB'])->walk('CISCO-CEF-MIB::cefSwitchingPath');
+        if ($response->getExitCode() !== 0) {
+            return;
+        }
+
+        $cefs = $response->table(3);
         if (empty($cefs)) {
             return;
         }
@@ -60,13 +65,13 @@ class CiscoCef implements Module
             foreach ($afis as $afi => $paths) {
                 Log::info(" |- $afi");
                 foreach ($paths as $path => $path_name) {
-                    Log::info(' | |-' . $path . ': ' . $path_name['cefSwitchingPath']);
+                    Log::info(' | |-' . $path . ': ' . $path_name['CISCO-CEF-MIB::cefSwitchingPath']);
                     $models->push(new CefSwitching([
                         'device_id' => $device->device_id,
                         'entPhysicalIndex' => (int) $entity,
                         'afi' => $afi,
                         'cef_index' => (int) $path,
-                        'cef_path' => $path_name['cefSwitchingPath'],
+                        'cef_path' => $path_name['CISCO-CEF-MIB::cefSwitchingPath'],
                     ]));
                 }
             }
@@ -86,7 +91,12 @@ class CiscoCef implements Module
             return;
         }
 
-        $cefs = SnmpQuery::hideMib()->walk('CISCO-CEF-MIB::cefSwitchingStatsTable')->table(3);
+        $response = SnmpQuery::mibs(['CISCO-CEF-MIB'])->walk('CISCO-CEF-MIB::cefSwitchingStatsTable');
+        if ($response->getExitCode() !== 0) {
+            return;
+        }
+
+        $cefs = $response->table(3);
         if (empty($cefs)) {
             return;
         }
@@ -105,29 +115,29 @@ class CiscoCef implements Module
             foreach ($afis as $afi => $paths) {
                 Log::info(" |- $afi");
                 foreach ($paths as $index => $stat) {
-                    Log::info(' | |-' . $index . ': ' . ($stat['cefSwitchingPath'] ?? ''), ['nlb' => true]);
+                    Log::info(' | |-' . $index . ': ' . ($stat['CISCO-CEF-MIB::cefSwitchingPath'] ?? ''), ['nlb' => true]);
 
                     $model = new CefSwitching([
                         'device_id' => $device->device_id,
                         'entPhysicalIndex' => (int) $entity,
                         'afi' => $afi,
                         'cef_index' => (int) $index,
-                        'cef_path' => $stat['cefSwitchingPath'] ?? '',
+                        'cef_path' => $stat['CISCO-CEF-MIB::cefSwitchingPath'] ?? '',
                     ]);
                     $old = $existing->get($model->getCompositeKey());
 
                     // Copy the 64-bit (HC) counters over the 32-bit ones where available
-                    $drop = $stat['cefSwitchingDrop'] ?? 0;
-                    $punt = $stat['cefSwitchingPunt'] ?? 0;
-                    $punt2host = $stat['cefSwitchingPunt2Host'] ?? 0;
-                    if (is_numeric($stat['cefSwitchingHCDrop'] ?? null)) {
-                        $drop = $stat['cefSwitchingHCDrop'];
+                    $drop = $stat['CISCO-CEF-MIB::cefSwitchingDrop'] ?? 0;
+                    $punt = $stat['CISCO-CEF-MIB::cefSwitchingPunt'] ?? 0;
+                    $punt2host = $stat['CISCO-CEF-MIB::cefSwitchingPunt2Host'] ?? 0;
+                    if (is_numeric($stat['CISCO-CEF-MIB::cefSwitchingHCDrop'] ?? null)) {
+                        $drop = $stat['CISCO-CEF-MIB::cefSwitchingHCDrop'];
                     }
-                    if (is_numeric($stat['cefSwitchingHCPunt'] ?? null)) {
-                        $punt = $stat['cefSwitchingHCPunt'];
+                    if (is_numeric($stat['CISCO-CEF-MIB::cefSwitchingHCPunt'] ?? null)) {
+                        $punt = $stat['CISCO-CEF-MIB::cefSwitchingHCPunt'];
                     }
-                    if (is_numeric($stat['cefSwitchingHCPunt2Host'] ?? null)) {
-                        $punt2host = $stat['cefSwitchingHCPunt2Host'];
+                    if (is_numeric($stat['CISCO-CEF-MIB::cefSwitchingHCPunt2Host'] ?? null)) {
+                        $punt2host = $stat['CISCO-CEF-MIB::cefSwitchingHCPunt2Host'];
                     }
 
                     // Track the previous values so the UI can compute a rate

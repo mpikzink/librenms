@@ -57,14 +57,14 @@
     <div class="form-group">
         <label for="proc-{{ $id }}" class="control-label">{{ __('Show Procedure field') }}:</label>
         <select class="form-control" name="proc" id="proc-{{ $id }}">
-            <option value="1" @if($proc == 1) selected @endif>{{ __('show') }}</option>
+            <option value="1" @if($proc == 1) selected @endif>{{ __('Show') }}</option>
             <option value="0" @if($proc == 0) selected @endif>{{ __('hide') }}</option>
         </select>
     </div>
     <div class="form-group">
         <label for="location-{{ $id }}" class="control-label">{{ __('Show Location field') }}:</label>
         <select class="form-control" name="location" id="location-{{ $id }}">
-            <option value="1" @if($location == 1) selected @endif>{{ __('show') }}</option>
+            <option value="1" @if($location == 1) selected @endif>{{ __('Show') }}</option>
             <option value="0" @if($location == 0) selected @endif>{{ __('hide') }}</option>
         </select>
     </div>

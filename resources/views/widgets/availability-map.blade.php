@@ -6,8 +6,8 @@
         <a href="{{ route('devices', ['filter' => $base_filter + ['disable_notify' => ['eq' => 1]]]) }}"><span class="label label-default label-font-border label-border">{{ __('alert-disabled') }}: {{ $device_totals['ignored'] }}</span></a>
         <a href="{{ route('devices', ['filter' => $base_filter + ['disabled' => ['eq' => 1]]]) }}"><span class="label blackbg label-font-border label-border">{{ __('disabled') }}: {{ $device_totals['disabled'] }}</span></a>
     @endif
-    <a href="{{ route('devices', ['filter' => $base_filter + ['state' => ['eq' => 'up']]]) }}"><span class="label label-success label-font-border label-border">{{ __('up') }}: {{ $device_totals['up'] }}</span></a>
-    <span class="label label-warning label-font-border label-border">{{ __('warn') }}: {{ $device_totals['warn'] }}</span>
+    <a href="{{ route('devices', ['filter' => $base_filter + ['state' => ['eq' => 'up']]]) }}"><span class="label label-success label-font-border label-border">{{ __('Up') }}: {{ $device_totals['up'] }}</span></a>
+    <span class="label label-warning label-font-border label-border">{{ __('Warning') }}: {{ $device_totals['warn'] }}</span>
     <a href="{{ route('devices', ['filter' => $base_filter + ['state' => ['eq' => 'down']]]) }}"><span class="label label-danger label-font-border label-border">{{ __('down') }}: {{ $device_totals['down'] }}</span></a>
     @if($device_totals['maintenance'])
     <span class="label label-default label-font-border label-border">{{ __('alerting.maintenance.maintenance') }}: {{ $device_totals['maintenance'] }}</span>
@@ -18,8 +18,8 @@
 @if($services_totals)
 <div class="widget-availability-service">
     <span>{{ __('Total services') }}</span>
-    <span class="label label-success label-font-border label-border">{{ __('up') }}: {{ $services_totals['up'] }}</span>
-    <span class="label label-warning label-font-border label-border">{{ __('warn') }}: {{ $services_totals['warn'] }}</span>
+    <span class="label label-success label-font-border label-border">{{ __('Up') }}: {{ $services_totals['up'] }}</span>
+    <span class="label label-warning label-font-border label-border">{{ __('Warning') }}: {{ $services_totals['warn'] }}</span>
     <span class="label label-danger label-font-border label-border">{{ __('down') }}: {{ $services_totals['down'] }}</span>
 </div>
 @endif

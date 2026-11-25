@@ -12,7 +12,7 @@
     <div id="public-status">
         <div class="well">
             <div class="status-header">{{ __('System Status') }}
-            <button class="btn btn-default pull-right" type="submit" id="ToggleLogon">{{ __('Logon') }}</button>
+            <button class="btn btn-default pull-right" type="submit" id="ToggleLogon">{{ __('Login') }}</button>
             </div>
         </div>
         <x-panel>
@@ -42,7 +42,7 @@
 
     <div id="public-logon" style="display:none;">
         <div class="well">
-            <div class="status-header">{{ __('Logon') }}
+            <div class="status-header">{{ __('Login') }}
                 <button class="btn btn-default pull-right" type="submit" id="ToggleStatus">{{ __('Status') }}</button>
             </div>
         </div>

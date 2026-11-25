@@ -7,7 +7,7 @@
     </div>
     <div class="form-group">
         <label for="device-{{ $id }}" class="control-label">{{ __('Device') }}</label>
-        <select class="form-control" id="device-{{ $id }}" name="device" data-placeholder="{{ __('All devices') }}">
+        <select class="form-control" id="device-{{ $id }}" name="device" data-placeholder="{{ __('All Devices') }}">
             @if($device)
                 <option value="{{ $device->device_id }}">{{ $device->display }}</option>
             @endif

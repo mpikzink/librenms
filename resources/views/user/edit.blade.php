@@ -55,7 +55,7 @@
                     success: function(data){
                         if (data.status === 'ok') {
                             $('#twofactor-unlock-form').remove();
-                            toastr.success('{{ __('Unlocked Two Factor.') }}');
+                            toastr.success('{{ __('Two-Factor unlocked.') }}');
                         } else {
                             toastr.error('{{ __('Failed to unlock Two Factor') }}<br />' + data.message);
                         }
